@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { AccountRepository } from 'src/repository/account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
+import { FilterQuery } from 'mongoose';
+import { Account } from './entities/account.entity';
 
 @Injectable()
 export class AccountService {
@@ -10,8 +12,8 @@ export class AccountService {
     return await this.accountService.create(createAccountDto);
   }
 
-  findOne(id: string) {
-    return this.accountService.findOne({ id });
+  findOne(entityFilterQuery: FilterQuery<Account>) {
+    return this.accountService.findOne(entityFilterQuery);
   }
 
   findAll() {

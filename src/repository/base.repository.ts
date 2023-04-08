@@ -49,7 +49,7 @@ export abstract class BaseRepository<T extends Document> {
   ): Promise<T | null> {
     try {
       updateBaseData.updatedAt = new Date();
-      console.log({ updateBaseData });
+
       const result = await this.entityModel.findOneAndUpdate(
         entityFilterQuery,
         updateBaseData,
@@ -66,7 +66,7 @@ export abstract class BaseRepository<T extends Document> {
 
   async deleteOne(entityFilterQuery: FilterQuery<T>): Promise<boolean> {
     const deleteResult = await this.entityModel.deleteOne(entityFilterQuery);
-    console.log({ deleteResult });
+
     if (!deleteResult.deletedCount) {
       throw new BadRequestException('No record found');
     }

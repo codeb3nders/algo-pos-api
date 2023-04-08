@@ -2,8 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { uuid } from 'src/_utils/data/uuid';
 
-export type AccountDocument = Account & Document;
-
 @Schema()
 export class Account {
   @Prop({ required: true, default: uuid, unique: true })
@@ -40,4 +38,5 @@ export class Account {
   updatedAt?: Date;
 }
 
+export type AccountDocument = Account & Document;
 export const AccountSchema = SchemaFactory.createForClass(Account);
