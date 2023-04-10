@@ -25,6 +25,11 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
+  @Get('/account/:id')
+  find(@Param('id') accountId: string) {
+    return this.productsService.find({ accountId });
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.productsService.findOne({ id });

@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AccountService } from 'src/account/account.service';
-import { encodePassWord } from 'src/_utils/data/encoder';
+import { encodePassWord } from 'src/utils/data/encoder';
 
 @Controller('user')
 export class UserController {

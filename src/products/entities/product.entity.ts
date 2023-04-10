@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { uuid } from 'src/_utils/data/uuid';
+import { uuid } from 'src/utils/data/uuid';
 
 @Schema()
 export class Products {
@@ -21,6 +21,9 @@ export class Products {
 
   @Prop()
   description: string;
+
+  @Prop({ type: JSON })
+  linkInventory: object;
 
   @Prop({ default: Date.now() })
   createdAt: number;

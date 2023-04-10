@@ -16,6 +16,10 @@ export class ProductsService {
     return this.productsRepository.find();
   }
 
+  find(entityFilterQuery: FilterQuery<Products>) {
+    return this.productsRepository.find(entityFilterQuery);
+  }
+
   findOne(entityFilterQuery: FilterQuery<Products>) {
     return this.productsRepository.findOne(entityFilterQuery);
   }

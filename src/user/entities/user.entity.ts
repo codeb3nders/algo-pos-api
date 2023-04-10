@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { uuid } from 'src/_utils/data/uuid';
+import { uuid } from 'src/utils/data/uuid';
 
 @Schema()
 export class User {
