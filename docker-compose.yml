@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  # MongoDB service
+  mongo_db:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo_db:/data/db
+  
+  #Nestjs API service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - 3000:3000
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - mongo_db
+    environment:
+      DATABASE_USER: test
+      DATABASE_PASSWORD: test  
+      DATABASE_HOST: mongo_db
+      SECRET: SeCR3TK3YF0RAp1
+      PORT: 3000
+      ZEROPAD: 4
+      DATABASE_PORT: 27017
+    
+  
+volumes:
+  mongo_db: {}  
+
+
+ 
