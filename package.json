@@ -29,10 +29,7 @@
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^6.3.0",
     "bcrypt": "^5.1.0",
-<<<<<<< HEAD
-=======
     "class-transformer": "^0.5.1",
->>>>>>> feature/docker
     "class-validator": "^0.14.0",
     "mongoose": "^7.0.3",
     "reflect-metadata": "^0.1.13",
