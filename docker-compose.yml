@@ -27,8 +27,7 @@ services:
       SECRET: SeCR3TK3YF0RAp1
       PORT: 3000
       ZEROPAD: 4
-      DATABASE_PORT: 27017
-    
+      DATABASE_PORT: 27017  
   
 volumes:
   mongo_db: {}  
