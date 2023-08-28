@@ -1,5 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/algo-pos/src",
+  "monorepo": true,
+  "root": "apps/algo-pos",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/algo-pos/tsconfig.app.json"
+  },
+  "projects": {
+    "algo-pos": {
+      "type": "application",
+      "root": "apps/algo-pos",
+      "entryFile": "main",
+      "sourceRoot": "apps/algo-pos/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/algo-pos/tsconfig.app.json"
+      }
+    },
+    "inventory": {
+      "type": "application",
+      "root": "apps/inventory",
+      "entryFile": "main",
+      "sourceRoot": "apps/inventory/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/inventory/tsconfig.app.json"
+      }
+    }
+  }
 }
