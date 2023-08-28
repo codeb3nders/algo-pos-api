@@ -9,6 +9,17 @@ services:
       - mongo_db:/data/db
   
   #Nestjs API service
+  inventory:
+    build:
+      context: .
+      dockerfile: apps/inventory/Dockerfile
+      target: dev
+    ports:
+      - 4001:4001
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - mongo_db  
   app:
     build:
       context: .
@@ -19,7 +30,8 @@ services:
     volumes:
       - ./src:/app/src
     depends_on:
-      - mongo_db    
+      - inventory
+      
     
   
 volumes:

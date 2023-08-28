@@ -3,6 +3,9 @@ import { InventoryModule } from './inventory.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(InventoryModule);
-  await app.listen(3000);
+  app.setGlobalPrefix('api');
+  await app.listen(4001, () =>
+    console.log('Inventory service is listening at PORT 4001'),
+  );
 }
 bootstrap();

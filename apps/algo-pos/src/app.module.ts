@@ -15,7 +15,7 @@ import { SalesModule } from './sales/sales.module';
       envFilePath: 'env_var/.env',
     }),
     MongooseModule.forRoot(
-      `mongodb://${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/${process.env.DATABASE_NAME}`,
+      `${process.env.MONGODB_URI}/${process.env.DATABASE_NAME}`,
     ),
     AccountModule,
     UserModule,
