@@ -7,9 +7,23 @@ import { AccountModule } from './account/account.module';
 import { UserModule } from './user/user.module';
 import { ProductsModule } from './products/products.module';
 import { SalesModule } from './sales/sales.module';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: 'INVENTORY_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://user:password@localhost:5672'],
+          queue: 'cats_queue',
+          queueOptions: {
+            durable: false,
+          },
+        },
+      },
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: 'env_var/.env',
