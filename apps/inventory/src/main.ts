@@ -1,21 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { InventoryModule } from './inventory.module';
+import { RmqService } from '@app/shared';
+import { AUTH_SERVICE } from '@app/shared/auth/services';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    InventoryModule,
-    {
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://user:password@localhost:5672'],
-        queue: 'cats_queue',
-        queueOptions: {
-          durable: false,
-        },
-      },
-    },
-  );
-  await app.listen();
+  const app = await NestFactory.create(InventoryModule);
+  const rmqService = app.get<RmqService>(RmqService);
+  app.connectMicroservice(rmqService.getOptions(AUTH_SERVICE));
+  await app.startAllMicroservices();
 }
 bootstrap();

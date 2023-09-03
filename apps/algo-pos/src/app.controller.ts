@@ -10,8 +10,8 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/greeter')
-  async getHelloAsync() {
-    return await this.appService.getHelloAsync();
-  }
+  // @Get('/greeter')
+  // async getHelloAsync() {
+  //   return await this.appService.getHelloAsync();
+  // }
 }

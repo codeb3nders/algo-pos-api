@@ -1,41 +1,59 @@
-version: '3.9'
-
 services:
-  # MongoDB service
+  # algo-pos:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/algo-pos/Dockerfile
+  #     target: development
+  #   command: npm run start:dev algo-pos
+  #   env_file:
+  #     - ./apps/algo-pos/.env
+  #   depends_on:
+  #     - rabbitmq
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '3000:3000'
+
+  inventory:
+    build:
+      context: .
+      dockerfile: ./apps/inventory/Dockerfile
+      target: development
+    command: npm run start:dev inventory
+    env_file:
+      - ./apps/inventory/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  
+  orders:
+    build:
+      context: .
+      dockerfile: ./apps/orders/Dockerfile
+      target: development
+    command: npm run start:dev orders
+    env_file:
+      - ./apps/orders/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3001:3001'
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+
   mongo_db:
     image: mongo:latest
     restart: always
     volumes:
       - mongo_db:/data/db
   
-  #Nestjs API service
-  inventory:
-    build:
-      context: .
-      dockerfile: apps/inventory/Dockerfile
-      target: dev
-    ports:
-      - 4001:4001
-    volumes:
-      - ./src:/app/src
-    depends_on:
-      - mongo_db  
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
-    ports:
-      - 4000:4000
-    volumes:
-      - ./src:/app/src
-    depends_on:
-      - inventory
-      
-    
-  
 volumes:
-  mongo_db: {}  
-
-
- 
+  mongo_db: {}

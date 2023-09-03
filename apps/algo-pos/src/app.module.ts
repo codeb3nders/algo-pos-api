@@ -1,40 +1,26 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import * as Joi from 'joi';
+import { AuthModule, DatabaseModule, RmqModule } from '@app/shared';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AccountModule } from './account/account.module';
-import { UserModule } from './user/user.module';
-import { ProductsModule } from './products/products.module';
-import { SalesModule } from './sales/sales.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AUTH_SERVICE } from '@app/shared/auth/services';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'INVENTORY_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://user:password@localhost:5672'],
-          queue: 'cats_queue',
-          queueOptions: {
-            durable: false,
-          },
-        },
-      },
-    ]),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: 'env_var/.env',
+      validationSchema: Joi.object({
+        MONGODB_URI: Joi.string().required(),
+        PORT: Joi.number().required(),
+      }),
+      envFilePath: './apps/algo-pos/.env',
     }),
-    MongooseModule.forRoot(
-      `${process.env.MONGODB_URI}/${process.env.DATABASE_NAME}`,
-    ),
-    AccountModule,
-    UserModule,
-    ProductsModule,
-    SalesModule,
+    DatabaseModule,
+    RmqModule.register({
+      name: AUTH_SERVICE,
+    }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
