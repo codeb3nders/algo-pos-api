@@ -12,9 +12,9 @@ export class InventoryController {
     return `Hey, Hello ${name}`;
   }
 
-  @MessagePattern('validate_user')
-  async accumulate(data: number[]): Promise<number> {
+  @EventPattern('validate_user')
+  async accumulate(data: number = 10): Promise<number> {
     console.log('MESSAGE RECIPIENT');
-    return (data || []).reduce((a, b) => a + b);
+    return data + 10;
   }
 }

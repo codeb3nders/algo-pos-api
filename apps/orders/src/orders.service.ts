@@ -14,6 +14,7 @@ export class OrdersService {
   ) {}
 
   getHello(): string {
+    console.log('getHello');
     this.billingClient.emit('order_created', {
       request_id: '1234567890',
       Authentication: 'authentication',
@@ -24,12 +25,12 @@ export class OrdersService {
   async getOrders() {
     console.log('getOrders');
     this.authClient
-      .send('validate_user', {
+      .emit('validate_user', {
         Authentication: 'authentication',
       })
       .pipe(
         tap((res) => {
-          console.log('res', res);
+          console.log('res ---------> ----->', res);
         }),
         catchError(() => {
           throw new UnauthorizedException();
