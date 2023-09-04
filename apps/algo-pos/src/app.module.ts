@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { AuthModule, DatabaseModule, RmqModule } from '@app/shared';
+import { DatabaseModule, RmqModule } from '@app/shared';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AUTH_SERVICE } from '@app/shared/auth/services';
+import { BILLING_SERVICE } from 'apps/orders/constants/services';
 
 @Module({
   imports: [
@@ -14,13 +15,16 @@ import { AUTH_SERVICE } from '@app/shared/auth/services';
         MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().required(),
       }),
-      envFilePath: './apps/algo-pos/.env',
+      envFilePath: './apps/orders/.env',
     }),
     DatabaseModule,
+
     RmqModule.register({
       name: AUTH_SERVICE,
     }),
-    AuthModule,
+    RmqModule.register({
+      name: BILLING_SERVICE,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

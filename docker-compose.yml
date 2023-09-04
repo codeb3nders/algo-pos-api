@@ -1,19 +1,19 @@
 services:
-  # algo-pos:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/algo-pos/Dockerfile
-  #     target: development
-  #   command: npm run start:dev algo-pos
-  #   env_file:
-  #     - ./apps/algo-pos/.env
-  #   depends_on:
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3000:3000'
+  algo-pos:
+    build:
+      context: .
+      dockerfile: ./apps/algo-pos/Dockerfile
+      target: development
+    command: npm run start:dev algo-pos
+    env_file:
+      - ./apps/algo-pos/.env
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3002:3002'
 
   inventory:
     build:
