@@ -13,7 +13,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - '3002:3002'
+      - '4000:4000'
 
   inventory:
     build:

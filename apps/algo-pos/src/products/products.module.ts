@@ -31,5 +31,6 @@ import { BILLING_SERVICE } from 'apps/orders/constants/services';
   ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductsRepository],
+  exports: [ProductsService],
 })
 export class ProductsModule {}
