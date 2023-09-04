@@ -1,6 +1,13 @@
 # compiled output
 /dist
 /node_modules
+/env_var
+/api/.env
+/inventory/.env
+/orders/.env
+/users/.env
+.env
+
 
 # Logs
 logs
