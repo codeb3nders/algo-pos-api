@@ -30,7 +30,7 @@ export class UserController {
 
     const user = await this.accountService.findOne({ businessEmail: email });
 
-    createUserDto.accountId = user.id;
+    createUserDto.accountId = user._id;
     createUserDto.access = 'admin';
 
     return this.userService.create(createUserDto);

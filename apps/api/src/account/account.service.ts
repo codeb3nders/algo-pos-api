@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AccountRepository } from '../repository/account.repository';
+import { AccountRepository } from './account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { FilterQuery } from 'mongoose';

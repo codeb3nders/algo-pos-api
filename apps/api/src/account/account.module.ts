@@ -3,7 +3,7 @@ import { AccountService } from './account.service';
 import { AccountController } from './account.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AccountSchema } from './entities/account.entity';
-import { AccountRepository } from '../repository/account.repository';
+import { AccountRepository } from './account.repository';
 
 @Module({
   imports: [

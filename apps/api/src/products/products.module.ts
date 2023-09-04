@@ -4,7 +4,7 @@ import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductsSchema } from './entities/product.entity';
-import { ProductsRepository } from '../repository/products.repository';
+import { ProductsRepository } from './products.repository';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule, RmqModule } from '@app/shared';
 import { AUTH_SERVICE } from '@app/shared/auth/services';

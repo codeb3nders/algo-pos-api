@@ -1,12 +1,10 @@
+import { AbstractDocument } from '@app/shared';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { uuid } from '../../utils/data/uuid';
+// import { uuid } from '../../utils/data/uuid';
 
 @Schema()
-export class Products {
-  @Prop({ required: true, default: uuid, unique: true })
-  id: string;
-
+export class Products extends AbstractDocument {
   @Prop({ required: true })
   accountId: string;
 

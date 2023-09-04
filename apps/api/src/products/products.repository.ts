@@ -2,14 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import {
-  ProductsDocument,
-  Products,
-} from '../products/entities/product.entity';
-import { BaseRepository } from './base.repository';
+import { ProductsDocument, Products } from './entities/product.entity';
+
+import { AbstractRepository } from '@app/shared';
 
 @Injectable()
-export class ProductsRepository extends BaseRepository<ProductsDocument> {
+export class ProductsRepository extends AbstractRepository<Products> {
   constructor(
     @InjectModel(Products.name)
     ProductsModel: Model<ProductsDocument>,
