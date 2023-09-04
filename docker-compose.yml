@@ -1,12 +1,12 @@
 services:
-  algo-pos:
+  api:
     build:
       context: .
-      dockerfile: ./apps/algo-pos/Dockerfile
+      dockerfile: ./apps/api/Dockerfile
       target: development
-    command: npm run start:dev algo-pos
+    command: npm run start:dev api
     env_file:
-      - ./apps/algo-pos/.env
+      - ./apps/api/.env
     depends_on:
       - rabbitmq
     volumes:

@@ -2,6 +2,10 @@
 /dist
 /node_modules
 /env_var
+/api/.env
+/inventory/.env
+/orders/.env
+
 
 # Logs
 logs
