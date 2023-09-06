@@ -13,10 +13,13 @@ export abstract class AbstractRepository<T extends AbstractDocument> {
   ) {}
 
   async create(createBaseData: unknown) {
+    console.log('CREATE BSE DATA', createBaseData);
     const entity = new this.entityModel(createBaseData);
+    console.log('entity', entity);
     try {
       return await entity.save();
     } catch (error) {
+      console.log('MAY ERROR', error);
       throw new BadRequestException(error.message || error);
     }
   }
@@ -25,14 +28,18 @@ export abstract class AbstractRepository<T extends AbstractDocument> {
     entityFilterQuery: FilterQuery<T>,
     projection?: Record<string, unknown>,
   ): Promise<T | null> {
+    console.log('====================================', entityFilterQuery);
+
     const response = await this.entityModel.findOne(entityFilterQuery, {
       _id: 0,
       __v: 0,
       ...projection,
     });
+    console.log('RESPONSE', response);
     if (isNil(response)) {
       throw new BadRequestException('No record found');
     }
+
     return response;
   }
 

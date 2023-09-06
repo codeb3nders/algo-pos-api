@@ -8,6 +8,7 @@ services:
     env_file:
       - ./apps/api/.env
     depends_on:
+      - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -24,6 +25,7 @@ services:
     env_file:
       - ./apps/inventory/.env
     depends_on:
+      - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -38,12 +40,30 @@ services:
     env_file:
       - ./apps/orders/.env
     depends_on:
+      - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
+      - '3002:3002'
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: npm run start:dev auth
+    ports:
       - '3001:3001'
+    env_file:
+      - ./apps/auth/.env
+    depends_on:
+      - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      
   rabbitmq:
     image: rabbitmq
     ports:
@@ -51,9 +71,13 @@ services:
 
   mongo_db:
     image: mongo:latest
+    environment:
+      - MONNGO_INITDB_DATABASE=algosales
+
     restart: always
     volumes:
       - mongo_db:/data/db
+    
   
 volumes:
   mongo_db: {}

@@ -9,7 +9,6 @@ import { BILLING_SERVICE } from 'apps/orders/constants/services';
 import { ProductsController } from './products/products.controller';
 import { ProductsModule } from './products/products.module';
 import { AccountModule } from './account/account.module';
-import { SalesModule } from './sales/sales.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -25,7 +24,6 @@ import { UserModule } from './user/user.module';
     DatabaseModule,
     ProductsModule,
     AccountModule,
-    SalesModule,
     UserModule,
     RmqModule.register({
       name: AUTH_SERVICE,

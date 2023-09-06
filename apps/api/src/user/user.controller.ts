@@ -22,6 +22,7 @@ export class UserController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
+    console.log('FIND ALL');
     const { email, password: rawPassword } = createUserDto;
 
     const password = await encodePassWord(rawPassword);
@@ -38,12 +39,14 @@ export class UserController {
 
   @Get()
   findAll() {
-    return this.userService.findAll();
+    console.log('FIND ALL');
+    return 'this.userService.findAll();';
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.userService.findOne({ id });
+    console.log('ID', id);
+    return this.userService.findOne({ email: 'coffeealgo@gmail.com' });
   }
 
   @Patch(':id')

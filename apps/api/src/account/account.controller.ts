@@ -22,7 +22,7 @@ export class AccountController {
 
   @Get()
   findAll() {
-    return this.accountService.findAll();
+    return 'this.accountService.findAll();';
   }
 
   @Get(':id')
