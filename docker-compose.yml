@@ -71,9 +71,7 @@ services:
 
   mongo_db:
     image: mongo:latest
-    environment:
-      - MONNGO_INITDB_DATABASE=algosales
-
+    
     restart: always
     volumes:
       - mongo_db:/data/db

@@ -7,11 +7,11 @@ import * as bcrypt from 'bcrypt';
 
 import { CreateUserRequest } from './dto/create-user.request';
 import { User } from './schemas/user.schema';
-import { UserRepository } from 'apps/api/src/user/user.repository';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UserRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(request: CreateUserRequest) {
     console.log('VALIDATE USER', request);
@@ -50,5 +50,9 @@ export class UsersService {
 
   async getUser(getUserArgs: Partial<User>) {
     return this.usersRepository.findOne(getUserArgs);
+  }
+
+  async getAllUsers() {
+    return this.usersRepository.find({});
   }
 }

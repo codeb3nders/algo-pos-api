@@ -6,10 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AUTH_SERVICE } from '@app/shared/auth/services';
 import { BILLING_SERVICE } from 'apps/orders/constants/services';
-import { ProductsController } from './products/products.controller';
-import { ProductsModule } from './products/products.module';
-import { AccountModule } from './account/account.module';
-import { UserModule } from './user/user.module';
+
 
 @Module({
   imports: [
@@ -22,9 +19,6 @@ import { UserModule } from './user/user.module';
       envFilePath: './apps/orders/.env',
     }),
     DatabaseModule,
-    ProductsModule,
-    AccountModule,
-    UserModule,
     RmqModule.register({
       name: AUTH_SERVICE,
     }),
@@ -32,7 +26,7 @@ import { UserModule } from './user/user.module';
       name: BILLING_SERVICE,
     }),
   ],
-  controllers: [AppController, ProductsController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

@@ -1,342 +1,81 @@
-import { FilterQuery, Model, UpdateQuery } from 'mongoose';
-
-import { isNil } from 'lodash';
-import { BadRequestException } from '@nestjs/common';
+import { Logger, NotFoundException } from '@nestjs/common';
+import {
+  FilterQuery,
+  Model,
+  Types,
+  UpdateQuery,
+  SaveOptions,
+  Connection,
+} from 'mongoose';
 import { AbstractDocument } from './abstract.schema';
-interface StringMap {
-  [key: string]: string;
-}
-export abstract class AbstractRepository<T extends AbstractDocument> {
+
+export abstract class AbstractRepository<TDocument extends AbstractDocument> {
+  protected abstract readonly logger: Logger;
+
   constructor(
-    private entityModel: Model<T>,
-    private aggregateQry?: any,
+    protected readonly model: Model<TDocument>,
+    private readonly connection: Connection,
   ) {}
 
-  async create(createBaseData: unknown) {
-    console.log('CREATE BSE DATA', createBaseData);
-    const entity = new this.entityModel(createBaseData);
-    console.log('entity', entity);
-    try {
-      return await entity.save();
-    } catch (error) {
-      console.log('MAY ERROR', error);
-      throw new BadRequestException(error.message || error);
-    }
+  async create(
+    document: Omit<TDocument, '_id'>,
+    options?: SaveOptions,
+  ): Promise<TDocument> {
+    const createdDocument = new this.model({
+      ...document,
+      _id: new Types.ObjectId(),
+    });
+    return (
+      await createdDocument.save(options)
+    ).toJSON() as unknown as TDocument;
   }
 
-  async findOne(
-    entityFilterQuery: FilterQuery<T>,
-    projection?: Record<string, unknown>,
-  ): Promise<T | null> {
-    console.log('====================================', entityFilterQuery);
+  async findOne(filterQuery: FilterQuery<TDocument>): Promise<any> {
+    const document = await this.model.findOne(filterQuery, {}, { lean: true });
 
-    const response = await this.entityModel.findOne(entityFilterQuery, {
-      _id: 0,
-      __v: 0,
-      ...projection,
-    });
-    console.log('RESPONSE', response);
-    if (isNil(response)) {
-      throw new BadRequestException('No record found');
+    if (!document) {
+      this.logger.warn('Document not found with filterQuery', filterQuery);
+      throw new NotFoundException('Document not found.');
     }
 
-    return response;
-  }
-
-  async find(
-    entityFilterQuery?: FilterQuery<T>,
-    projection?: Record<string, unknown>,
-  ): Promise<T[] | null> {
-    return await this.entityModel.find(entityFilterQuery, {
-      _id: 0,
-      __v: 0,
-      ...projection,
-    });
+    return document;
   }
 
   async findOneAndUpdate(
-    entityFilterQuery: FilterQuery<T>,
-    updateBaseData: UpdateQuery<unknown>,
-  ): Promise<T | null> {
-    try {
-      updateBaseData.updatedAt = new Date();
-
-      const result = await this.entityModel.findOneAndUpdate(
-        entityFilterQuery,
-        updateBaseData,
-      );
-
-      if (!result) {
-        throw new BadRequestException('No record found');
-      }
-      return result;
-    } catch (error) {
-      throw new BadRequestException(error.message || error);
-    }
-  }
-
-  async deleteOne(entityFilterQuery: FilterQuery<T>): Promise<boolean> {
-    const deleteResult = await this.entityModel.deleteOne(entityFilterQuery);
-
-    if (!deleteResult.deletedCount) {
-      throw new BadRequestException('No record found');
-    }
-    return deleteResult.deletedCount === 1;
-  }
-
-  // Aggregate Queries
-
-  async aggregateFindOne(
-    key: StringMap,
-    entityFilterQuery?: any,
-  ): Promise<T[]> {
-    const _relations = [];
-    if (entityFilterQuery) {
-      const relations = entityFilterQuery.relations;
-      delete entityFilterQuery.relations;
-
-      if (relations) {
-        const rel = JSON.parse(relations);
-
-        rel.forEach((r) => {
-          _relations.push({
-            $lookup: {
-              from: `${r}`,
-              localField: 'employeeNo',
-              foreignField: 'employeeNo',
-              as: `${r}`,
-            },
-          });
-        });
-      }
-    }
-
-    const pipeline = [
-      ...this.aggregateQry.values(),
-      {
-        $match: {
-          ...key,
-        },
-      },
-      {
-        $limit: 1,
-      },
-      ..._relations,
-    ];
-
-    const pLine = [...pipeline, ..._relations];
-    const response = await this.entityModel.aggregate(pLine);
-    return response[0];
-  }
-
-  async aggregateFind(entityFilterQuery?: any): Promise<T[]> {
-    const pipeline = [...this.aggregateQry.values()];
-
-    const relations = entityFilterQuery.relations;
-
-    delete entityFilterQuery.relations;
-    const params = entityFilterQuery;
-
-    const keys = Object.keys(params);
-
-    let n = keys.length;
-    const toMatch = [];
-    while (n--) {
-      let value =
-        isNaN(params[keys[n]]) || keys[n] === 'employeeNo'
-          ? params[keys[n]].toLowerCase()
-          : params[keys[n]];
-
-      if (value === 'true' || value === 'false') {
-        value = value === 'true';
-      }
-      if (typeof value === 'boolean') {
-        toMatch.push({
-          ['$expr']: { $eq: [`$${keys[n]}`, value] },
-        });
-      } else {
-        toMatch.push({
-          ['$expr']: { $eq: [{ $toLower: `$${keys[n]}` }, `${value}`] },
-        });
-      }
-    }
-
-    const match = toMatch.map((i) => {
-      return { $match: i };
+    filterQuery: FilterQuery<TDocument>,
+    update: UpdateQuery<TDocument>,
+  ) {
+    const document = await this.model.findOneAndUpdate(filterQuery, update, {
+      lean: true,
+      new: true,
     });
 
-    const _relations = [];
-
-    if (relations) {
-      const rel = JSON.parse(relations);
-
-      rel.forEach((r) => {
-        _relations.push({
-          $lookup: {
-            from: `${r}`,
-            localField: 'employeeNo',
-            foreignField: 'employeeNo',
-            as: `${r}`,
-          },
-        });
-      });
+    if (!document) {
+      this.logger.warn(`Document not found with filterQuery:`, filterQuery);
+      throw new NotFoundException('Document not found.');
     }
 
-    const pLine = [...pipeline, ...match, ..._relations];
-    return this.entityModel.aggregate(pLine);
+    return document;
   }
 
-  async aggregateFindByAttribute(
-    key: any,
-    entityFilterQuery?: any,
-  ): Promise<T[]> {
-    const _relations = [];
-
-    if (entityFilterQuery) {
-      const relations = entityFilterQuery.relations;
-      delete entityFilterQuery.relations;
-
-      if (relations) {
-        const rel = JSON.parse(relations);
-
-        rel.forEach((r) => {
-          _relations.push({
-            $lookup: {
-              from: `${r}`,
-              localField: 'employeeNo',
-              foreignField: 'employeeNo',
-              as: `${r}`,
-            },
-          });
-        });
-      }
-    }
-
-    const pipeline = [
-      ...this.aggregateQry.values(),
-      {
-        $match: {
-          ...key,
-        },
-      },
-
-      ..._relations,
-    ];
-
-    return await this.entityModel.aggregate(pipeline);
+  async upsert(
+    filterQuery: FilterQuery<TDocument>,
+    document: Partial<TDocument>,
+  ) {
+    return this.model.findOneAndUpdate(filterQuery, document, {
+      lean: true,
+      upsert: true,
+      new: true,
+    });
   }
 
-  async aggregateFindByEmployeeId(
-    employeeNo: string,
-    entityFilterQuery?: any,
-  ): Promise<T[]> {
-    const _relations = [];
-
-    if (entityFilterQuery) {
-      const relations = entityFilterQuery.relations;
-      delete entityFilterQuery.relations;
-
-      if (relations) {
-        const rel = JSON.parse(relations);
-
-        rel.forEach((r) => {
-          _relations.push({
-            $lookup: {
-              from: `${r}`,
-              localField: 'employeeNo',
-              foreignField: 'employeeNo',
-              as: `${r}`,
-            },
-          });
-        });
-      }
-    }
-
-    const pipeline = [
-      ...this.aggregateQry.values(),
-      {
-        $match: {
-          employeeNo: employeeNo,
-        },
-      },
-
-      ..._relations,
-    ];
-
-    return await this.entityModel.aggregate(pipeline);
+  async find(filterQuery: FilterQuery<TDocument>) {
+    return this.model.find(filterQuery, {}, { lean: true });
   }
 
-  async search(entityFilterQuery?: any): Promise<T[]> {
-    const pipeline = [...this.aggregateQry.values()];
-
-    const relations = entityFilterQuery.relations;
-
-    delete entityFilterQuery.relations;
-    const params = entityFilterQuery;
-
-    const keys = Object.keys(params);
-    let n = keys.length;
-    const toMatch = [];
-    while (n--) {
-      let value = isNaN(params[keys[n]])
-        ? params[keys[n]].toUpperCase()
-        : Number(params[keys[n]]);
-
-      if (value === 'true' || value === 'false') {
-        value = value === 'true';
-      }
-      if (typeof value === 'boolean') {
-        toMatch.push({
-          ['$expr']: { $eq: [`$${keys[n]}`, value] },
-        });
-      } else {
-        if (keys[n] === 'isActive') {
-          toMatch.push({
-            [`${keys[n]}`]: value === 'TRUE',
-          });
-        } else {
-          if (isNaN(Number(value))) {
-            toMatch.push({
-              [`${keys[n]}`]: { ['$regex']: value },
-            });
-          } else {
-            toMatch.push({
-              [`${keys[n]}`]: value,
-            });
-          }
-        }
-      }
-    }
-
-    const _relations = [];
-
-    if (relations) {
-      const rel = JSON.parse(relations);
-
-      rel.forEach((r) => {
-        _relations.push({
-          $lookup: {
-            from: `${r}`,
-            localField: 'employeeNo',
-            foreignField: 'employeeNo',
-            as: `${r}`,
-          },
-        });
-      });
-    }
-
-    const pLine = [...pipeline, ..._relations];
-    if (toMatch.length > 0) {
-      pLine.push({
-        $match: {
-          $or: [...toMatch],
-        },
-      });
-    }
-    return this.entityModel.aggregate(pLine);
-  }
-
-  findLast() {
-    return this.entityModel.findOne({}, {}, { sort: { employeeNo: -1 } });
+  async startTransaction() {
+    const session = await this.connection.startSession();
+    session.startTransaction();
+    return session;
   }
 }
