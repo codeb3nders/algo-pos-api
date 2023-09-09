@@ -1,41 +1,36 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { OrdersRepository } from './orders.repository';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { AUTH_SERVICE } from '@app/shared/auth/services';
-import { catchError, tap } from 'rxjs';
-import { BILLING_SERVICE } from '../constants/services';
+import { lastValueFrom } from 'rxjs';
+import { BILLING_SERVICE } from './constants/services';
+import { CreateOrderRequest } from './dto/create-order.request';
+import { OrdersRepository } from './orders.repository';
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly ordersRepository: OrdersRepository,
-    @Inject(AUTH_SERVICE) private authClient: ClientProxy,
     @Inject(BILLING_SERVICE) private billingClient: ClientProxy,
   ) {}
 
-  getHello(): string {
-    console.log('getHello');
-    this.billingClient.emit('order_created', {
-      request_id: '1234567890',
-      Authentication: 'authentication',
-    });
-    return 'Hello from orders.';
+  async createOrder(request: CreateOrderRequest, authentication: string) {
+    const session = await this.ordersRepository.startTransaction();
+    try {
+      const order = await this.ordersRepository.create(request, { session });
+      await lastValueFrom(
+        this.billingClient.emit('order_created', {
+          request,
+          Authentication: authentication,
+        }),
+      );
+      await session.commitTransaction();
+      return order;
+    } catch (err) {
+      await session.abortTransaction();
+      throw err;
+    }
   }
 
   async getOrders() {
-    console.log('getOrders');
-    this.authClient
-      .emit('validate_user', {
-        Authentication: 'authentication',
-      })
-      .pipe(
-        tap((res) => {
-          console.log('res ---------> ----->', res);
-        }),
-        catchError(() => {
-          throw new UnauthorizedException();
-        }),
-      );
     return this.ordersRepository.find({});
   }
 }

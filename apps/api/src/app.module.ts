@@ -7,7 +7,6 @@ import { AppService } from './app.service';
 import { AUTH_SERVICE } from '@app/shared/auth/services';
 import { BILLING_SERVICE } from 'apps/orders/constants/services';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import * as Joi from 'joi';
+import { DatabaseModule, RmqModule, AuthModule } from '@app/shared';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
-import { DatabaseModule, RmqModule } from '@app/shared';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Order, OrderSchema } from './schemas/order.schema';
-import { ConfigModule } from '@nestjs/config';
 import { OrdersRepository } from './orders.repository';
-import { AUTH_SERVICE } from '@app/shared/auth/services';
-import { BILLING_SERVICE } from '../constants/services';
+import { Order, OrderSchema } from './schemas/order.schema';
+import { BILLING_SERVICE } from './constants/services';
 
 @Module({
   imports: [
@@ -23,11 +22,9 @@ import { BILLING_SERVICE } from '../constants/services';
     DatabaseModule,
     MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]),
     RmqModule.register({
-      name: AUTH_SERVICE,
-    }),
-    RmqModule.register({
       name: BILLING_SERVICE,
     }),
+    AuthModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository],

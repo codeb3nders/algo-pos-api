@@ -1,5 +1,5 @@
-import { AbstractDocument } from '@app/shared';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { AbstractDocument } from '@app/shared';
 
 @Schema({ versionKey: false })
 export class Order extends AbstractDocument {
