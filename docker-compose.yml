@@ -8,7 +8,7 @@ services:
     env_file:
       - ./apps/api/.env
     depends_on:
-      - mongo_db
+      # - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -25,7 +25,7 @@ services:
     env_file:
       - ./apps/inventory/.env
     depends_on:
-      - mongo_db
+      # - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -40,13 +40,32 @@ services:
     env_file:
       - ./apps/orders/.env
     depends_on:
-      - mongo_db
+      # - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - '3002:3002'
+  
+  products:
+    build:
+      context: .
+      dockerfile: ./apps/products/Dockerfile
+      target: development
+    command: npm run start:dev products
+    env_file:
+      - ./apps/products/.env
+    depends_on:
+      # - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3003:3003'
+  
+
   auth:
     build:
       context: .
@@ -58,7 +77,7 @@ services:
     env_file:
       - ./apps/auth/.env
     depends_on:
-      - mongo_db
+      # - mongo_db
       - rabbitmq
     volumes:
       - .:/usr/src/app
@@ -69,13 +88,39 @@ services:
     ports:
       - '5672:5672'
 
-  mongo_db:
-    image: mongo:latest
-    
-    restart: always
-    volumes:
-      - mongo_db:/data/db
+#   mongo_db:
+#     image: mongo:latest    
+#     restart: always
+#     environment:
+#       - MONGODB_ADVERTISED_HOSTNAME=mongo_db
+#       - MONGODB_REPLICA_SET_MODE=primary
+#       - MONGODB_REPLICA_SET_KEY=replicasetkey123
+#     volumes:
+#       - mongo_db:/data/db
+#     ports:
+#       - '27017:27017'
+
+#   mongodb-secondary:
+#     image: mongo:latest
+#     depends_on:
+#       - mongo_db
+#     environment:
+#       - MONGODB_ADVERTISED_HOSTNAME=mongodb-secondary
+#       - MONGODB_REPLICA_SET_MODE=secondary
+#       - MONGODB_INITIAL_PRIMARY_HOST=mongo_db
+#       - MONGODB_REPLICA_SET_KEY=replicasetkey123
+
+#   mongodb-arbiter:
+#     image: mongo:latest
+#     depends_on:
+#       - mongo_db
+#     environment:
+#       - MONGODB_ADVERTISED_HOSTNAME=mongodb-arbiter
+#       - MONGODB_REPLICA_SET_MODE=arbiter
+#       - MONGODB_INITIAL_PRIMARY_HOST=mongo_db
+#       - MONGODB_REPLICA_SET_KEY=replicasetkey123
     
   
-volumes:
-  mongo_db: {}
+# volumes:
+#   mongo_db:
+#     driver: local
