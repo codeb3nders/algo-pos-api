@@ -23,6 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ userId }: TokenPayload) {
+    console.log('JWT VALIDATE', userId);
     try {
       return await this.usersService.getUser({
         _id: new Types.ObjectId(userId),

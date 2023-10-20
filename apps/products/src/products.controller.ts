@@ -43,6 +43,7 @@ export class ProductsController {
     @Param('id') id: string,
     @Body() request: CreateProductRequest,
   ) {
+    console.log('UPDATE PRODUCT', id, request);
     return this.productsService.updateProduct(id, request);
   }
 }
