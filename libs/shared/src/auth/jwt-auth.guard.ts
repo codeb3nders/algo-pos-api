@@ -11,48 +11,41 @@ import { AUTH_SERVICE } from './services';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(@Inject(AUTH_SERVICE) private authClient: ClientProxy) {}
+  constructor(
+    @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,
+  ) {}
 
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const authentication = this.getAuthentication(context);
-    return this.authClient
+    if (context.getType() !== 'http') {
+      return false;
+    }
+
+    const request = context.switchToHttp().getRequest();
+
+    const authHeader = request.headers['authorization'];
+
+    if (!authHeader) return false;
+
+    const authHeaderParts = (authHeader as string).split(' ');
+
+    if (authHeaderParts.length !== 2) return false;
+
+    const [, jwt] = authHeaderParts;
+
+    return this.authService
       .send('validate_user', {
-        Authentication: authentication,
+        Authentication: jwt,
       })
       .pipe(
         tap((res) => {
-          this.addUser(res, context);
+          console.log('DO SOMETHING ', { res });
+          // do something here
         }),
         catchError(() => {
           throw new UnauthorizedException();
         }),
       );
-  }
-
-  private getAuthentication(context: ExecutionContext) {
-    console.log({ context });
-    let authentication: string;
-    if (context.getType() === 'rpc') {
-      authentication = context.switchToRpc().getData().Authentication;
-    } else if (context.getType() === 'http') {
-      authentication = context.switchToHttp().getRequest().cookies
-        ?.Authentication;
-    }
-    if (!authentication) {
-      throw new UnauthorizedException(
-        'No value was provided for Authentication',
-      );
-    }
-    return authentication;
-  }
-
-  private addUser(user: any, context: ExecutionContext) {
-    if (context.getType() === 'rpc') {
-      context.switchToRpc().getData().user = user;
-    } else if (context.getType() === 'http') {
-      context.switchToHttp().getRequest().user = user;
-    }
   }
 }

@@ -9,6 +9,7 @@ import { OrdersRepository } from './orders.repository';
 import { Order, OrderSchema } from './schemas/order.schema';
 import { BILLING_SERVICE } from './constants/services';
 import { AuthModule } from 'apps/auth/src/auth.module';
+import { AUTH_SERVICE } from '@app/shared/auth/services';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AuthModule } from 'apps/auth/src/auth.module';
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]),
+    RmqModule.register({ name: AUTH_SERVICE }),
     RmqModule.register({
       name: BILLING_SERVICE,
     }),
