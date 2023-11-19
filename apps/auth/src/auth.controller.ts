@@ -3,7 +3,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './current-user.decorator';
-import JwtAuthGuard from './guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@app/shared';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { User } from './users/schemas/user.schema';
 

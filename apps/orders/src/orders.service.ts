@@ -16,6 +16,7 @@ export class OrdersService {
     const session = await this.ordersRepository.startTransaction();
     try {
       const order = await this.ordersRepository.create(request, { session });
+      console.log('ORDERSSSSSS CREATED');
       await lastValueFrom(
         this.billingClient.emit('order_created', {
           request,
@@ -23,6 +24,7 @@ export class OrdersService {
         }),
       );
       await session.commitTransaction();
+      console.log('SESSION COMMITED');
       return order;
     } catch (err) {
       await session.abortTransaction();

@@ -8,6 +8,7 @@ export class InventoryController {
 
   @EventPattern('order_created')
   async getGreetingMessageAysnc(name: string): Promise<string> {
+    console.log('----------------------> ORDER CREATED EVENT');
     return `Hey, Hello ${name}`;
   }
 
