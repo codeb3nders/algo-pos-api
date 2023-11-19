@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductRequest } from './dto/create-product.request';
-import { JwtAuthGuard } from '@app/shared';
+import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
 
 @Controller()
 export class ProductsController {
