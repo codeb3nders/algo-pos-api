@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as Joi from 'joi';
-import { DatabaseModule, RmqModule, AuthModule } from '@app/shared';
+import { DatabaseModule, RmqModule } from '@app/shared';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
 import { OrdersRepository } from './orders.repository';
 import { Order, OrderSchema } from './schemas/order.schema';
 import { BILLING_SERVICE } from './constants/services';
+import { AuthModule } from 'apps/auth/src/auth.module';
 
 @Module({
   imports: [

@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
 import { InventoryService } from './inventory.service';
 
 @Controller()
@@ -8,7 +8,6 @@ export class InventoryController {
 
   @EventPattern('order_created')
   async getGreetingMessageAysnc(name: string): Promise<string> {
-    console.log('======================= TRIGGERED');
     return `Hey, Hello ${name}`;
   }
 

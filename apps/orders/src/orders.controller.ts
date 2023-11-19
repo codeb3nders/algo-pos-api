@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@app/shared';
+
 import { CreateOrderRequest } from './dto/create-order.request';
 import { OrdersService } from './orders.service';
+import JwtAuthGuard from 'apps/auth/src/guards/jwt-auth.guard';
 
 @Controller('orders')
 export class OrdersController {
