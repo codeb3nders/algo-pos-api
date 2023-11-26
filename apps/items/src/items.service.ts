@@ -1,33 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
+
 import { ItemsRepository } from './items.repository';
+
+import { Injectable } from '@nestjs/common';
 import { CreateItemRequest } from './dto/create-item.request';
 
 @Injectable()
 export class ItemsService {
   constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  getHello(): string {
-    return 'Hello items!';
-  }
-
-  async createOrder(request: CreateItemRequest) {
+  async createItem(request: CreateItemRequest, authentication: string) {
     const session = await this.itemsRepository.startTransaction();
+    console.log('CREATE');
     try {
-      const item = await this.itemsRepository.create(request, { session });
+      const order = await this.itemsRepository.create(request, { session });
 
-      console.log({ item });
+      await session.commitTransaction();
 
-      return item;
+      return order;
     } catch (err) {
-      console.log({ err });
       await session.abortTransaction();
       throw err;
     }
   }
 
-  async get() {
-    const res = await this.itemsRepository.find({});
-    console.log({ res });
-    return res;
+  async getItems() {
+    return this.itemsRepository.find({});
   }
 }

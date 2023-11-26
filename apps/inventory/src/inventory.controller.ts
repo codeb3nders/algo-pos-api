@@ -1,20 +1,23 @@
-import { Controller } from '@nestjs/common';
-import { EventPattern } from '@nestjs/microservices';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+
+import { JwtAuthGuard } from 'apps/auth/src/guards/jwt-auth.guard';
+
 import { InventoryService } from './inventory.service';
+import { CreateInventoryRequest } from './dto/create-inventory.request';
 
 @Controller()
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @EventPattern('order_created')
-  async getGreetingMessageAysnc(name: string): Promise<string> {
-    console.log('----------------------> ORDER CREATED EVENT');
-    return `Hey, Hello ${name}`;
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  async createInventory(@Body() request: CreateInventoryRequest) {
+    return this.inventoryService.createInventory(request);
   }
 
-  @EventPattern('validate_user')
-  async accumulate(data: number = 10): Promise<number> {
-    console.log('MESSAGE RECIPIENT');
-    return data + 10;
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getInventory() {
+    return this.inventoryService.getInventory();
   }
 }

@@ -1,6 +1,16 @@
-import { IsNotEmpty, IsPositive, IsString, IsBoolean } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsPositive,
+  IsString,
+  IsBoolean,
+  IsArray,
+} from 'class-validator';
 
 export class CreateItemRequest {
+  @IsString()
+  @IsNotEmpty()
+  itemCode: string;
+
   @IsString()
   @IsNotEmpty()
   category: string;
@@ -30,4 +40,7 @@ export class CreateItemRequest {
 
   @IsBoolean()
   VATExempt: boolean;
+
+  @IsArray()
+  linkInventory: Array<string>;
 }

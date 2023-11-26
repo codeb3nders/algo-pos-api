@@ -4,6 +4,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema()
 export class Item extends AbstractDocument {
   @Prop()
+  itemCode: string;
+
+  @Prop()
   category: string;
 
   @Prop()
@@ -29,6 +32,9 @@ export class Item extends AbstractDocument {
 
   @Prop()
   VATExempt: boolean;
+
+  @Prop()
+  linkInventory: string[];
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);

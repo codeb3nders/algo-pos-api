@@ -1,18 +1,7 @@
-import {
-  IsNotEmpty,
-  IsPhoneNumber,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsNotEmpty } from 'class-validator';
 
 export class CreateOrderRequest {
-  @IsString()
+  @IsArray()
   @IsNotEmpty()
-  name: string;
-
-  @IsPositive()
-  price: number;
-
-  @IsPhoneNumber()
-  phoneNumber: string;
+  orders: Array<object>;
 }
