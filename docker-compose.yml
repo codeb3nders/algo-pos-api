@@ -82,6 +82,23 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+
+  items:
+    build:
+      context: .
+      dockerfile: ./apps/items/Dockerfile
+      target: development
+    command: npm run start:dev items
+    env_file:
+      - ./apps/items/.env
+    depends_on:
+      # - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3004:3004'
       
   rabbitmq:
     image: rabbitmq

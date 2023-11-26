@@ -22,6 +22,26 @@ export class JwtAuthGuard implements CanActivate {
       return false;
     }
 
+    const token = this.extractToken(context);
+
+    console.log({ token });
+
+    return this.authService
+      .send('validate_user', {
+        Authentication: token,
+      })
+      .pipe(
+        tap((res) => {
+          console.log('DO SOMETHING ', { res });
+          // do something here
+        }),
+        catchError(() => {
+          throw new UnauthorizedException();
+        }),
+      );
+  }
+
+  extractToken(context: ExecutionContext): string | false {
     const request = context.switchToHttp().getRequest();
 
     const authHeader = request.headers['authorization'];
@@ -34,18 +54,6 @@ export class JwtAuthGuard implements CanActivate {
 
     const [, jwt] = authHeaderParts;
 
-    return this.authService
-      .send('validate_user', {
-        Authentication: jwt,
-      })
-      .pipe(
-        tap((res) => {
-          console.log('DO SOMETHING ', { res });
-          // do something here
-        }),
-        catchError(() => {
-          throw new UnauthorizedException();
-        }),
-      );
+    return jwt;
   }
 }
