@@ -25,6 +25,7 @@ export class ProductsController {
     return this.productsService.getProductById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('products')
   getProducts() {
     return this.productsService.getProducts();

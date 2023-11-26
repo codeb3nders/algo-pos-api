@@ -8,6 +8,7 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { Product, ProductSchema } from './schemas/product.schema';
 import { ProductsRepository } from './products.repository';
+import { JwtStrategy } from 'apps/auth/src/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -27,6 +28,6 @@ import { ProductsRepository } from './products.repository';
     AuthModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, ProductsRepository],
+  providers: [ProductsService, ProductsRepository, JwtStrategy],
 })
 export class ProductsModule {}

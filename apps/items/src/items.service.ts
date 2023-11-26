@@ -13,16 +13,21 @@ export class ItemsService {
   async createOrder(request: CreateItemRequest) {
     const session = await this.itemsRepository.startTransaction();
     try {
-      const order = await this.itemsRepository.create(request, { session });
+      const item = await this.itemsRepository.create(request, { session });
 
-      return order;
+      console.log({ item });
+
+      return item;
     } catch (err) {
+      console.log({ err });
       await session.abortTransaction();
       throw err;
     }
   }
 
   async get() {
-    return this.itemsRepository.find({});
+    const res = await this.itemsRepository.find({});
+    console.log({ res });
+    return res;
   }
 }

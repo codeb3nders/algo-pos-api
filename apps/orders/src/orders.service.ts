@@ -14,6 +14,7 @@ export class OrdersService {
 
   async createOrder(request: CreateOrderRequest, authentication: string) {
     const session = await this.ordersRepository.startTransaction();
+    console.log('CREATE');
     try {
       const order = await this.ordersRepository.create(request, { session });
 
