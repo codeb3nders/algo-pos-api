@@ -10,6 +10,7 @@ import { Order, OrderSchema } from './schemas/order.schema';
 import { BILLING_SERVICE } from './constants/services';
 import { AuthModule } from 'apps/auth/src/auth.module';
 import { AUTH_SERVICE } from '@app/shared/auth/services';
+import { INVENTORY_SERVICE } from 'apps/inventory/src/constants/service';
 
 @Module({
   imports: [
@@ -26,6 +27,9 @@ import { AUTH_SERVICE } from '@app/shared/auth/services';
     RmqModule.register({ name: AUTH_SERVICE }),
     RmqModule.register({
       name: BILLING_SERVICE,
+    }),
+    RmqModule.register({
+      name: INVENTORY_SERVICE,
     }),
     AuthModule,
   ],

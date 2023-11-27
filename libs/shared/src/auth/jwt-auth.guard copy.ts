@@ -32,7 +32,6 @@ export class JwtRabbitAuthGuard implements CanActivate {
   }
 
   private getAuthentication(context: ExecutionContext) {
-    console.log({ context });
     let authentication: string;
     if (context.getType() === 'rpc') {
       authentication = context.switchToRpc().getData().Authentication;

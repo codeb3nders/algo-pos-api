@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AUTH_SERVICE } from '@app/shared/auth/services';
 import { BILLING_SERVICE } from 'apps/orders/constants/services';
+import { INVENTORY_SERVICE } from 'apps/inventory/src/constants/service';
 
 @Module({
   imports: [
@@ -23,6 +24,10 @@ import { BILLING_SERVICE } from 'apps/orders/constants/services';
     }),
     RmqModule.register({
       name: BILLING_SERVICE,
+    }),
+
+    RmqModule.register({
+      name: INVENTORY_SERVICE,
     }),
   ],
   controllers: [AppController],

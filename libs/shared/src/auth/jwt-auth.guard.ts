@@ -24,8 +24,6 @@ export class JwtAuthGuard implements CanActivate {
 
     const token = this.extractToken(context);
 
-    console.log({ token });
-
     return this.authService
       .send('validate_user', {
         Authentication: token,

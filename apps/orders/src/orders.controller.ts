@@ -11,21 +11,6 @@ export class OrdersController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async createOrder(@Body() request: CreateOrderRequest, @Req() req: any) {
-    const sampleORder = [
-      {
-        itemCode: 'a001',
-        name: 'Americano',
-        price: 40,
-        qty: 1,
-      },
-      {
-        itemCode: 'a002',
-        name: 'Spanish latte',
-        price: 80,
-        qry: 2,
-      },
-    ];
-
     return this.ordersService.createOrder(request, req.cookies?.Authentication);
   }
 

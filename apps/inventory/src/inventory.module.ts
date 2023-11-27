@@ -9,6 +9,7 @@ import { InventoryController } from './inventory.controller';
 import { InventoryService } from './inventory.service';
 import { Inventory, InventorySchema } from './schemas/inventory.schema';
 import { InventoryRepository } from './Inventory.repository';
+import { INVENTORY_SERVICE } from './constants/service';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { InventoryRepository } from './Inventory.repository';
       { name: Inventory.name, schema: InventorySchema },
     ]),
     RmqModule.register({ name: AUTH_SERVICE }),
-
+    RmqModule.register({ name: INVENTORY_SERVICE }),
     AuthModule,
   ],
   controllers: [InventoryController],

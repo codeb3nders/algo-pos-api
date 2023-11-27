@@ -1,5 +1,3 @@
-import { lastValueFrom } from 'rxjs';
-
 import { ItemsRepository } from './items.repository';
 
 import { Injectable } from '@nestjs/common';
@@ -9,9 +7,9 @@ import { CreateItemRequest } from './dto/create-item.request';
 export class ItemsService {
   constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  async createItem(request: CreateItemRequest, authentication: string) {
+  async createItem(request: CreateItemRequest) {
     const session = await this.itemsRepository.startTransaction();
-    console.log('CREATE');
+
     try {
       const order = await this.itemsRepository.create(request, { session });
 
