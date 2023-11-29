@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -56,6 +57,7 @@ export class InventoryController {
       });
     } catch (error) {
       console.error({ error });
+      throw new NotFoundException('Document not found.');
     }
     channel.ack(originalMessage);
   }

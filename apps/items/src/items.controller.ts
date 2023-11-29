@@ -11,7 +11,7 @@ export class ItemsController {
   @Post()
   @UseGuards(JwtAuthGuard)
   async createItem(@Body() request: CreateItemRequest, @Req() req: any) {
-    return this.itemsService.createItem(request, req.cookies?.Authentication);
+    return this.itemsService.createItem(request);
   }
 
   @Get()
