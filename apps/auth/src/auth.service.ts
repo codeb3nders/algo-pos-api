@@ -15,12 +15,38 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: User) {
-    const payload = { name: user.email, sub: user._id.toHexString() };
+  // async login(user: User, response: Response) {
+  //   const payload = { name: user.email, sub: user._id.toHexString() };
 
-    return {
-      access_token: this.jwtService.sign(payload),
+  //   response({ message: 'success' });
+  // }
+
+  // logout(response: Response) {
+  //   response.cookie('Authentication', '', {
+  //     httpOnly: true,
+  //     expires: new Date(),
+  //   });
+  // }
+
+  async login(user: User, response: Response) {
+    const tokenPayload: TokenPayload = {
+      userId: user._id.toHexString(),
     };
+
+    const expires = new Date();
+    expires.setSeconds(
+      expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
+    );
+
+    const token = this.jwtService.sign(tokenPayload);
+
+    response.cookie('Authentication', token, {
+      secure: true,
+      httpOnly: true,
+      expires,
+    });
+
+    console.log('SSSSSSUUUUUASDFASFASF');
   }
 
   logout(response: Response) {

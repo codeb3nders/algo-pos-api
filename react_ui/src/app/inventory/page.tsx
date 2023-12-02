@@ -4,8 +4,6 @@ async function getData() {
   const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY29mZmVlLWFsZ28tYWRtaW5AZ21haWwuY29tIiwic3ViIjoiNjU2MzJiZWEzMGYyNDU4MTY0MmI3MDA4IiwiaWF0IjoxNzAxMjU0MDg5LCJleHAiOjE3MDEyNTc2ODl9.WmAh7uc4JBc59J0cFRJ5jey_7cQPmWL4px-5aS-uwjg';
 
-  //...
-
   const headers = {
     Authorization: `Bearer ${token}`,
   };

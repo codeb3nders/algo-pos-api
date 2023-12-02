@@ -1,27 +1,24 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { Menu } from '../components/menu'
+import type { Metadata } from 'next';
 
-const inter = Inter({ subsets: ['latin'] })
+import './globals.css';
+import { Menu } from '../components/menu';
 
 export const metadata: Metadata = {
   title: 'Algo POS',
   description: 'Algo Point of sales system',
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      
-      <body className={inter.className}>
-      <Menu/>
-        {children}
-        </body>
+      <body className="min-h-screen">
+        <Menu />
+        <div className="flex items-center justify-center p-24">{children}</div>
+      </body>
     </html>
-  )
+  );
 }

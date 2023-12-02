@@ -14,6 +14,7 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(request: CreateUserRequest) {
+    console.log('REQUEST', request);
     await this.validateCreateUserRequest(request);
     const user = await this.usersRepository.create({
       ...request,

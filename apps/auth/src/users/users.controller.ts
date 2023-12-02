@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateUserRequest } from './dto/create-user.request';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
@@ -8,8 +8,9 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  async getUsers() {
+  // @UseGuards(JwtAuthGuard)
+  async getUsers(@Req() req) {
+    console.log(req.cookie);
     return this.usersService.getAllUsers();
   }
 

@@ -4,10 +4,16 @@ import { AuthModule } from './auth.module';
 import { RmqOptions } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AuthModule);
-  app.enableCors();
+  app.use(cookieParser());
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+  });
+
   const rmqService = app.get<RmqService>(RmqService);
   app.connectMicroservice<RmqOptions>(rmqService.getOptions('AUTH', true));
   app.useGlobalPipes(new ValidationPipe());
