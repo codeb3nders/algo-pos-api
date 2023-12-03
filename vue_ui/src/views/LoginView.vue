@@ -9,7 +9,7 @@ const userStore = useUserStore()
 const handleSubmit =async ()=>{
   const email = 'coffee-algo-admin@gmail.com'
   const password = 'password'
-  console.log('called signin')
+  
   userStore.signIn({email,password})
 
   // router.push('/about')
