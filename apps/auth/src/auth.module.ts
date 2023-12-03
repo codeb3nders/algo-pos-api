@@ -5,10 +5,11 @@ import { RmqModule, DatabaseModule } from '@app/shared';
 import * as Joi from 'joi';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
+// import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UsersModule } from './users/users.module';
 import { SubModule } from './sub/sub.module';
+import { JwtStrategy } from './sub/jwt.strategy';
 
 @Module({
   imports: [

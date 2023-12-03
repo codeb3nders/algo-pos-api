@@ -12,7 +12,6 @@ export class UsersController {
   // @UseGuards(JwtAuthGuard)
   @UseGuards(JwtGuard)
   async getUsers(@Req() req) {
-    console.log(req.cookie);
     return this.usersService.getAllUsers();
   }
 
