@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { JwtSecretTMP, JwtStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { SubController } from './sub.controller';
+import { JwtSecretTMP, JwtStrategy } from '../strategies/jwt.strategy';
 
 @Module({
   imports: [
