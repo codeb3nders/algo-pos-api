@@ -1,45 +1,21 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
-import { Response } from 'express';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CurrentUser } from './current-user.decorator';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { User } from './users/schemas/user.schema';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtGuard } from './sub/guards';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly AuthService: AuthService) {}
 
-  @Get('logout')
-  async logout(@Res({ passthrough: true }) response: Response) {
-    this.authService.logout(response);
-    response.send();
+  @UseGuards(JwtGuard)
+  @Get()
+  privateEndpoint(@Req() req): string {
+    console.log(req.cookies);
+    return this.AuthService.getHello();
   }
 
-  @Post('check')
-  async check(@Body() request) {
-    console.log('CHECK', request);
-    return 'CHEK';
-  }
-
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  async login(
-    @CurrentUser() user: User,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    await this.authService.login(user, response);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = user;
-    response.send(rest);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @MessagePattern('validate_user')
-  async validateUser(@CurrentUser() user: User) {
-    return user;
+  @Get('/public')
+  publicEndpoint(@Req() req): string {
+    console.log(req.cookies);
+    return this.AuthService.getHello();
   }
 }
