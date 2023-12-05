@@ -19,7 +19,6 @@ export class AuthController {
 
   @Post('check')
   async check(@Body() request) {
-    console.log('CHECK', request);
     return 'CHEK';
   }
 
