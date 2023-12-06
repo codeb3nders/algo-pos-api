@@ -30,8 +30,9 @@ export class AuthController {
   ) {
     await this.authService.login(user, response);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    console.log({ user });
     const { password, ...rest } = user;
-    response.send({ message: rest });
+    response.send(rest);
   }
 
   @UseGuards(JwtAuthGuard)

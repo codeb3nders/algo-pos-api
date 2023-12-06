@@ -18,7 +18,7 @@ const handleSubmit =async ()=>{
 </script>
 <template>
   <div class="about">
-    {{ userStore.token }}
+  {{ userStore.user }}
     <h1>Login>>></h1>
     <button @click="handleSubmit()">Submit</button>
     <br/>
