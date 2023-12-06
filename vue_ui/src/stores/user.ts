@@ -2,17 +2,16 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import axios from 'axios'
 import router from '@/router'
+import { getUsersApi } from '@/api/user'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref()
-  const isAuthenticated = ref(false)
+  const errorMessage = ref('')
 
-  interface User {}
+  const setUser = (data?: string | null) => (user.value = data)
 
-  const setUser = (data?: string) => (user.value = data)
-  const setAuthenticated = (data: boolean) => (isAuthenticated.value = data)
-  const setLocalData = (data: User | null) => {
-    localStorage.setItem('user', JSON.stringify(data))
+  const setLocalData = (data: string) => {
+    localStorage.setItem('user-email', data)
   }
 
   const signIn = async (data: { email: string; password: string }) => {
@@ -29,30 +28,45 @@ export const useUserStore = defineStore('user', () => {
           password: data.password
         })
       })
-
-      router.push('/about')
-
-      console.log('111111')
-
+      errorMessage.value = ''
       const user = await response.json()
-      console.log('2222')
 
-      setAuthenticated(true)
-      console.log('3333')
+      if (user.email) {
+        setUser(user)
+        setLocalData(user.email)
 
-      setUser(user)
-      setLocalData(user)
+        router.push('/about')
+      } else {
+        setUser(null)
+        setLocalData('')
+        errorMessage.value = 'Invalid username or password!'
+        router.push('/login')
+      }
     } catch (error) {
       console.log({ error })
-      setAuthenticated(false)
-      setLocalData(null)
+      setLocalData('')
       setUser()
+      errorMessage.value = 'Invalid username or password!'
+      router.push('/login')
     }
   }
 
   const getUser = async () => {
     try {
-      const response = await fetch('http://localhost:3001/auth/users', {
+      const response = await getUsersApi()
+
+      const user = response
+      setUser(user[0])
+    } catch (error) {
+      console.log({ error })
+
+      setUser()
+    }
+  }
+
+  const signOut = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/auth/logout', {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -60,16 +74,24 @@ export const useUserStore = defineStore('user', () => {
         }
       })
 
-      const user = await response.json()
-      console.log('SET TO AUTH')
-      setAuthenticated(true)
-      setUser(user[0])
+      setUser(null)
+      setLocalData('')
+      router.push('/login')
     } catch (error) {
       console.log({ error })
-      setAuthenticated(false)
+
+      setLocalData('')
       setUser()
     }
   }
 
-  return { user, signIn, getUser, isAuthenticated }
+  const authCheck = async () => {
+    const userEmail = localStorage.getItem('user-email')
+
+    if (!userEmail) {
+      router.push('/login')
+    }
+  }
+
+  return { user, signIn, signOut, getUser, authCheck, errorMessage }
 })

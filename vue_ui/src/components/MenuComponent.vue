@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { useUserStore } from '@/stores/user';
-import { onMounted } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { computed, onMounted } from 'vue'
 
-onMounted(() => {
-  // get user
-  const userStore = useUserStore()
-  userStore.getUser()
+const userStore = useUserStore()
+
+const isLogged = computed(() => {
+  return !!userStore.user?.email
 })
 
-
+const logout = async () => {
+  userStore.signOut()
+}
 </script>
 
 <template>
   <div class="flex w-full justify-start space-x-4">
-    <router-link to="/">Go to Home</router-link>
-    <router-link to="/about">Go to About</router-link>
-    <router-link to="/login">Login</router-link>
+    <div v-if="isLogged"><router-link to="/">Dashboard</router-link></div>
+    <router-link to="/about">About</router-link>
+    <div v-if="!isLogged"><router-link to="/login">Login</router-link></div>
+    <button v-if="isLogged" @click="logout()">Logout</button>
   </div>
 </template>

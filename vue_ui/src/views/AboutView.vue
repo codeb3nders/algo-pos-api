@@ -1,27 +1,23 @@
 <script setup lang="ts">
-import { useCounterStore } from '@/stores/counter';
-import { useUserStore } from '@/stores/user';
-
-
-const counter = useCounterStore()
+import router from '@/router'
+import { useUserStore } from '@/stores/user'
+import { onMounted } from 'vue'
 
 const userStore = useUserStore()
 
-const handleClick = ()=>{
-  console.log('======', userStore.token)
-  
-  
-}
+const handleClick = () => {}
+
+onMounted(() => {
+  userStore.authCheck()
+})
 </script>
 
 <template>
   <div class="about">
-    {{ userStore.token }}
     <h1>This is an about page</h1>
-   <div class="w-full">
-    <button @click="handleClick">click me</button>
-   </div>
-    
+    <div class="w-full">
+      <button @click="handleClick">click me</button>
+    </div>
   </div>
 </template>
 
