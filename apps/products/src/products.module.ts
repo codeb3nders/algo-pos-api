@@ -18,7 +18,7 @@ import { JwtStrategy } from 'apps/auth/src/strategies/jwt.strategy';
         MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().required(),
       }),
-      envFilePath: './apps/orders/.env',
+      envFilePath: './apps/products/.env',
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),

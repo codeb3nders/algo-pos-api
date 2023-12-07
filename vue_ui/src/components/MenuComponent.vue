@@ -5,7 +5,8 @@ import { computed, onMounted } from 'vue'
 const userStore = useUserStore()
 
 const isLogged = computed(() => {
-  return !!userStore.user?.email
+    const userEmail = localStorage.getItem('user-email')
+  return !!userStore.user?.email || !!userEmail
 })
 
 const logout = async () => {

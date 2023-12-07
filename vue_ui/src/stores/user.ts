@@ -93,5 +93,5 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { user, signIn, signOut, getUser, authCheck, errorMessage }
+  return { setUser, setLocalData,user, signIn, signOut, getUser, authCheck, errorMessage }
 })

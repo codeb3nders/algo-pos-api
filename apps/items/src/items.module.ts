@@ -18,7 +18,7 @@ import { ItemsRepository } from './items.repository';
         MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().required(),
       }),
-      envFilePath: './apps/items/.env',
+      envFilePath: './apps/itemsr/.env',
     }),
     DatabaseModule,
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),

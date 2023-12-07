@@ -19,7 +19,7 @@ import { INVENTORY_SERVICE } from './constants/service';
         MONGODB_URI: Joi.string().required(),
         PORT: Joi.number().required(),
       }),
-      envFilePath: './apps/items/.env',
+      envFilePath: './apps/inventory/.env',
     }),
     DatabaseModule,
     MongooseModule.forFeature([

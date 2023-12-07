@@ -12,10 +12,11 @@ const handleSubmit = async () => {
 }
 
 onMounted(() => {
-  /** NEED SUGGESTIONS BEFORE IMPLEMENTATION
+ 
   const userEmail = localStorage.getItem('user-email')
+  console.log({userEmail})
   if (userEmail) router.push('/')
-   */
+   
 })
 </script>
 
