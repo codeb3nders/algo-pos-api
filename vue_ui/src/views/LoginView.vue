@@ -12,16 +12,14 @@ const handleSubmit = async () => {
 }
 
 onMounted(() => {
- 
   const userEmail = localStorage.getItem('user-email')
-  console.log({userEmail})
+  console.log({ userEmail })
   if (userEmail) router.push('/')
-   
 })
 </script>
 
 <template>
-  <div class="flex justify-center items-center mt-52">
+  <div class="flex justify-center items-center m-10">
     <div class="w-full max-w-xs">
       <form @submit.prevent="handleSubmit" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="identity-input mb-4">

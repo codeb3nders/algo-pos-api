@@ -1,7 +1,11 @@
 <script setup lang="ts">
-
+defineProps(['stocks'])
 </script>
 
 <template>
-  <h1 class="text-red-500">The Welcome page</h1>
+  <ul>
+    <li v-for="stock in stocks">
+      {{ stock.item }}
+    </li>
+  </ul>
 </template>

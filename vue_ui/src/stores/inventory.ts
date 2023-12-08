@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useUserStore } from './user'
+import router from '@/router'
 
 export const useInventoryStore = defineStore('inventory', () => {
-  
-const userStore = useUserStore()
+  const userStore = useUserStore()
   const inventory = ref()
 
   const setInventory = (data?: string) => (inventory.value = data)
@@ -19,8 +19,8 @@ const userStore = useUserStore()
         }
       })
 
-      const res = await response.json()  
-      
+      const res = await response.json()
+
       console.log(res?.length)
       if (res.length == undefined) {
         userStore.setUser()
