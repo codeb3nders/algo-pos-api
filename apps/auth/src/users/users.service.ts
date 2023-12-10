@@ -52,4 +52,15 @@ export class UsersService {
   async getAllUsers() {
     return this.usersRepository.find({});
   }
+
+  async getAllUser(id:string) {
+    console.log("ID", id)
+    try {
+       return "this.usersRepository.find({ _id: id })";
+    } catch (error) {
+      console.log({error})
+      return error
+    }
+   
+  }
 }

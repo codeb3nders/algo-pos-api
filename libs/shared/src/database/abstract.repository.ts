@@ -31,9 +31,16 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
   }
 
   async findOne(filterQuery: FilterQuery<TDocument>): Promise<any> {
+    if (filterQuery._id) {
+      if (filterQuery._id && !filterQuery._id.match(/^[0-9a-fA-F]{24}$/)) {
+        throw new NotFoundException('Document not found.');
+      }
+    }
+
     const document = await this.model.findOne(filterQuery, {}, { lean: true });
 
     if (!document) {
+      console.log('Document not found with filterQuery', filterQuery);
       this.logger.warn('Document not found with filterQuery', filterQuery);
       throw new NotFoundException('Document not found.');
     }
