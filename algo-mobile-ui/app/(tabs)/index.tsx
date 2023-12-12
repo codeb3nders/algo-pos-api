@@ -1,11 +1,12 @@
-import { Text, View } from '../../components/Themed';
+import { View, Text } from 'react-native';
+import React from 'react';
 
-export default function TabOneScreen() {
+const Index = () => {
   return (
-    <View className="flex-1 items-center text-red-400 justify-center bg-blue-300">
-      <Text className="text-red-400">
-        Open up App.js to start working on your app-----!
-      </Text>
+    <View>
+      <Text>Index</Text>
     </View>
   );
-}
+};
+
+export default Index;
