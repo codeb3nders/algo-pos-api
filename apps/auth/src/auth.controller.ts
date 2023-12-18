@@ -11,15 +11,34 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('check')
+  async check(@Body() request) {
+    return 'CHEK';
+  }
+
+  // @Get('logout')
+  // async logout(@Res({ passthrough: true }) response: Response) {
+  //   this.authService.logout(response);
+  //   response.send();
+  // }
+
+  // @UseGuards(LocalAuthGuard)
+  // @Post('login')
+  // async login(
+  //   @CurrentUser() user: User,
+  //   @Res({ passthrough: true }) response: Response,
+  // ) {
+  //   await this.authService.login(user, response);
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   console.log({ user });
+  //   const { password, ...rest } = user;
+  //   response.send(rest);
+  // }
+
   @Get('logout')
   async logout(@Res({ passthrough: true }) response: Response) {
     this.authService.logout(response);
     response.send();
-  }
-
-  @Post('check')
-  async check(@Body() request) {
-    return 'CHEK';
   }
 
   @UseGuards(LocalAuthGuard)
@@ -28,11 +47,14 @@ export class AuthController {
     @CurrentUser() user: User,
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.authService.login(user, response);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    console.log({ user });
-    const { password, ...rest } = user;
-    response.send(rest);
+    const { access_token } = await this.authService.login(user);
+
+    const { password, ...userData } = user;
+
+    response.send({
+      statusCode: 200,
+      user: { ...userData, access_token },
+    });
   }
 
   @UseGuards(JwtAuthGuard)
