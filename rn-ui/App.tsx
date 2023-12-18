@@ -4,37 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
-
-function LoginScreen({ navigation }: any) {
-  const auth: any = useAuth();
-
-  const login = async () => {
-    await auth.onLogin('coffee-algo-admin@gmail.com', 'password');
-  };
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Login Screen</Text>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.inputText}
-          secureTextEntry
-          placeholder="Password"
-          placeholderTextColor="#003f5c"
-        />
-      </View>
-
-      <Button title="Login" onPress={() => login()} />
-    </View>
-  );
-}
+import LoginScreen from './screens/login';
 
 function HomeScreen({ navigation }: any) {
   const auth: any = useAuth();
