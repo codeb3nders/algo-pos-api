@@ -21,24 +21,25 @@ export const AuthProvider = ({ children }: any) => {
   const [authState, setAuthState] = useState<{
     token: string | null;
     authenticated: boolean | null;
+    user: {
+      id: string;
+      email: string;
+    } | null;
   }>({
     token: null,
     authenticated: null,
+    user: null,
   });
 
   useEffect(() => {
     const loadToken = async () => {
-      const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      console.log({ token });
-      setAuthState({
-        token,
-        authenticated: token ? true : false,
-      });
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      const storage = await SecureStore.getItemAsync(TOKEN_KEY);
+      const user = JSON.parse(storage || '{}');
 
       setAuthState({
-        token,
-        authenticated: token ? true : false,
+        token: user.access_token,
+        authenticated: !!user.access_token,
+        user: { id: user._id, email: user.email },
       });
     };
     loadToken().catch(console.error.bind(console));
@@ -53,37 +54,43 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const login = async (email: string, password: string): Promise<any> => {
-    console.log('CALLED', email, password);
     try {
       const result = await axios.post(`${API_URL}/auth/login`, {
         email,
         password,
       });
-      console.log('RESULTS', result.data);
+
+      if (!result.data && !result.data.user.access_token) {
+        return { error: true, msg: 'Invalid Credentials' };
+      }
+
+      const { user } = result.data;
+
       setAuthState({
-        token: result.data.email,
-        authenticated: true,
+        token: user.access_token,
+        authenticated: !!user.access_token,
+        user: { id: user._id, email: user.email },
       });
 
       axios.defaults.headers.common[
         'Authorization'
-      ] = `Bearer ${result.data.email}`;
-      await SecureStore.setItemAsync(TOKEN_KEY, result.data.email);
-
-      return result;
+      ] = `Bearer ${user.access_token}`;
+      await SecureStore.setItemAsync(TOKEN_KEY, JSON.stringify(user));
     } catch (error) {
-      console.log('ERROR', error);
+      console.log('ERROR--', error);
       return { error: true, msg: (error as any).response.data.msg };
     }
   };
 
   const logout = async () => {
+    console.log('LOGIN OUT');
     await SecureStore.deleteItemAsync(TOKEN_KEY);
     axios.defaults.headers.common['Authorization'] = '';
-
+    await SecureStore.setItemAsync(TOKEN_KEY, '');
     setAuthState({
       token: null,
       authenticated: false,
+      user: null,
     });
   };
 

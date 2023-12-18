@@ -87,6 +87,8 @@ const Stack = createNativeStackNavigator();
 const StacksComponents = () => {
   const { authState, onLogout } = useAuth();
 
+  console.log('===authState', authState);
+
   return (
     <Stack.Navigator
       initialRouteName="Home"

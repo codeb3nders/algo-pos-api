@@ -1,11 +1,25 @@
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import e from 'express';
 
 export default function LoginScreen({ navigation }: any) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const auth: any = useAuth();
 
+  const handleInputChange = (value: string, name: string) => {
+    if (name == 'email') {
+      setEmail(() => value);
+    }
+
+    if (name == 'password') {
+      setPassword(() => value);
+    }
+  };
+
   const login = async () => {
-    await auth.onLogin('coffee-algo-admin@gmail.com', 'password');
+    await auth.onLogin(email, password);
   };
 
   return (
@@ -13,19 +27,27 @@ export default function LoginScreen({ navigation }: any) {
       <Text>Login Screen</Text>
       <View style={styles.inputView}>
         <TextInput
+          id="email"
           style={styles.inputText}
           placeholder="Email"
           placeholderTextColor="#003f5c"
+          onChangeText={(value) => handleInputChange(value, 'email')}
         />
       </View>
       <View style={styles.inputView}>
         <TextInput
+          id="password"
           style={styles.inputText}
           secureTextEntry
           placeholder="Password"
           placeholderTextColor="#003f5c"
+          onChangeText={(value) => handleInputChange(value, 'password')}
         />
       </View>
+
+      <Text>
+        {email} - {password}
+      </Text>
 
       <Button title="Login" onPress={() => login()} />
     </View>
