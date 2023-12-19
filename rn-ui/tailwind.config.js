@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('./colors');
 module.exports = {
   content: [
     './screens/**/*.{js,ts,jsx,tsx}',
@@ -7,7 +8,9 @@ module.exports = {
     './App.tsx',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: { ...colors, 'algo-green-1': '#24ae9c' },
+    },
   },
   plugins: [],
 };

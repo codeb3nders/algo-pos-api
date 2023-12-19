@@ -1,19 +1,20 @@
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
-import e from 'express';
+import COLOR from '../../colors';
 
 export default function LoginScreen({ navigation }: any) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth: any = useAuth();
 
   const handleInputChange = (value: string, name: string) => {
-    if (name == 'email') {
+    if (name == 'name') {
+      setName(() => value);
+    } else if (name == 'email') {
       setEmail(() => value);
-    }
-
-    if (name == 'password') {
+    } else if (name == 'password') {
       setPassword(() => value);
     }
   };
@@ -22,34 +23,53 @@ export default function LoginScreen({ navigation }: any) {
     await auth.onLogin(email, password);
   };
 
+  const viewText = (
+    name: string,
+    placeholder: string,
+    capital: string = 'words',
+  ) => {
+    return (
+      <View style={styles.inputView}>
+        <TextInput
+          autoCapitalize={capital}
+          style={styles.inputText}
+          placeholder={placeholder}
+          placeholderTextColor="white"
+          onChangeText={(value) => handleInputChange(value, name)}
+        />
+      </View>
+    );
+  };
+
+  const viewSecureText = (
+    name: string,
+    placeholder: string,
+    capital: string = 'words',
+  ) => {
+    return (
+      <View style={styles.inputView}>
+        <TextInput
+          secureTextEntry
+          autoCapitalize={capital}
+          style={styles.inputText}
+          placeholder={placeholder}
+          placeholderTextColor="white"
+          onChangeText={(value) => handleInputChange(value, name)}
+        />
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Login Screen</Text>
-      <View style={styles.inputView}>
-        <TextInput
-          id="email"
-          style={styles.inputText}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(value) => handleInputChange(value, 'email')}
-        />
-      </View>
-      <View style={styles.inputView}>
-        <TextInput
-          id="password"
-          style={styles.inputText}
-          secureTextEntry
-          placeholder="Password"
-          placeholderTextColor="#003f5c"
-          onChangeText={(value) => handleInputChange(value, 'password')}
-        />
-      </View>
-
-      <Text>
-        {email} - {password}
+      <Text className="my-5 text-xl font-bold text-algo-green-1">
+        Login Screen
       </Text>
 
-      <Button title="Login" onPress={() => login()} />
+      {viewText('email', 'Email', 'none')}
+      {viewSecureText('password', 'Password', 'none')}
+
+      <Button title="Submit" onPress={() => login()} />
     </View>
   );
 }
@@ -57,7 +77,7 @@ export default function LoginScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4FD3DA',
+    backgroundColor: `${COLOR['algo-green-1']}`,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -69,7 +89,7 @@ const styles = StyleSheet.create({
   },
   inputView: {
     width: '80%',
-    backgroundColor: '#3AB4BA',
+    backgroundColor: `${COLOR['algo-green-1']}`,
     borderRadius: 25,
     height: 50,
     marginBottom: 20,

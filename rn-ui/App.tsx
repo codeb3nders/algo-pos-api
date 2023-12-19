@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginScreen from './screens/login';
+import COLOR from './colors';
 
 function HomeScreen({ navigation }: any) {
   const auth: any = useAuth();
@@ -38,8 +39,8 @@ function DetailsScreen({ route, navigation }: any) {
   const otherParam = route.params.otherParam;
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen - {itemId}</Text>
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-algo-green-1">Details Screen - {itemId}</Text>
       <Button
         title="Go to Details... again"
         onPress={() =>
@@ -93,8 +94,9 @@ const StacksComponents = () => {
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
+        headerShown: false,
         headerStyle: {
-          backgroundColor: '#f4511e',
+          backgroundColor: `${COLOR['algo-green-1']}`,
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -104,7 +106,11 @@ const StacksComponents = () => {
     >
       {!authState?.authenticated ? (
         <>
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen
+            name="Login"
+            // options={{ headerShown: false }}
+            component={LoginScreen}
+          />
         </>
       ) : (
         <>
