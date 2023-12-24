@@ -1,67 +1,70 @@
-import React from 'react';
 import { Tabs } from 'expo-router';
-import Colors from '@/constants/Colors';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Colors from '@/constants/Colors';
+import React from 'react';
 
 const Layout = () => {
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
-        tabBarLabelStyle: { fontFamily: 'mon-sb' },
+        tabBarLabelStyle: {
+          fontFamily: 'mon-sb',
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           tabBarLabel: 'Explore',
-          tabBarIcon: ({ color, size }) => (
-            <Octicons name="search" size={size} color={color} />
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="search" size={size} color={color} />
           ),
         }}
       />
-
       <Tabs.Screen
         name="wishlists"
         options={{
           tabBarLabel: 'Wishlists',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="heart-o" size={size} color={color} />
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="heart-outline" size={size} color={color} />
           ),
         }}
       />
-
       <Tabs.Screen
         name="trips"
         options={{
           tabBarLabel: 'Trips',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="airbnb" size={size} color={color} />
           ),
         }}
       />
-
       <Tabs.Screen
         name="inbox"
         options={{
           tabBarLabel: 'Inbox',
-          tabBarIcon: ({ color, size }) => (
-            <Octicons name="inbox" size={size} color={color} />
+          tabBarIcon: ({ size, color }) => (
+            <MaterialCommunityIcons
+              name="message-outline"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
-
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="profile"
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
+          headerShown: false,
+          tabBarIcon: ({ size, color }) => (
             <FontAwesome name="user-o" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
     </Tabs>
   );
 };

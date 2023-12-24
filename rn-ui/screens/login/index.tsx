@@ -2,12 +2,16 @@ import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 import COLOR from '../../colors';
+import { useLoaderStore } from '../../store/loader.state';
 
 export default function LoginScreen({ navigation }: any) {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('coffee-algo-admin@gmail.com');
+  const [password, setPassword] = useState('password');
+  const [errorMessage, setErrorMessage] = useState('');
   const auth: any = useAuth();
+
+  const useLoader = useLoaderStore();
 
   const handleInputChange = (value: string, name: string) => {
     if (name == 'name') {
@@ -20,7 +24,11 @@ export default function LoginScreen({ navigation }: any) {
   };
 
   const login = async () => {
-    await auth.onLogin(email, password);
+    useLoader.setIsLoading(true);
+    const result = await auth.onLogin(email, password);
+
+    if (result?.error) setErrorMessage(result?.msg);
+    useLoader.setIsLoading(false);
   };
 
   const viewText = (
@@ -34,6 +42,7 @@ export default function LoginScreen({ navigation }: any) {
           autoCapitalize={capital}
           style={styles.inputText}
           placeholder={placeholder}
+          defaultValue={email}
           placeholderTextColor="white"
           onChangeText={(value) => handleInputChange(value, name)}
         />
@@ -52,6 +61,7 @@ export default function LoginScreen({ navigation }: any) {
           secureTextEntry
           autoCapitalize={capital}
           style={styles.inputText}
+          defaultValue={password}
           placeholder={placeholder}
           placeholderTextColor="white"
           onChangeText={(value) => handleInputChange(value, name)}
@@ -68,6 +78,10 @@ export default function LoginScreen({ navigation }: any) {
 
       {viewText('email', 'Email', 'none')}
       {viewSecureText('password', 'Password', 'none')}
+
+      {errorMessage && (
+        <Text className="my-5 text-xl text-red-500">{errorMessage}</Text>
+      )}
 
       <Button title="Submit" onPress={() => login()} />
     </View>
@@ -97,6 +111,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   inputText: {
+    fontSize: 18,
     height: 50,
     color: 'white',
   },

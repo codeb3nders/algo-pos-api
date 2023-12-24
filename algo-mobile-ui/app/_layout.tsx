@@ -1,12 +1,16 @@
+import ModalHeaderText from '@/components/ModalHeaderText';
+import { Ionicons } from '@expo/vector-icons';
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { SplashScreen, Stack } from 'expo-router';
+import { SplashScreen, Stack, router } from 'expo-router';
+import React from 'react';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { TouchableOpacity, useColorScheme } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -52,10 +56,39 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+        {/* <Stack.Screen name="listing/[id]" options={{ headerTitle: '' }} /> */}
         <Stack.Screen
-          name="{modals}/login"
-          options={{ presentation: 'modal' }}
+          name="(modals)/login"
+          options={{
+            presentation: 'modal',
+            animation: 'fade',
+            headerTransparent: true,
+            title: 'Login or Signup',
+          }}
+        />
+        <Stack.Screen
+          name="(modals)/booking"
+          options={{
+            presentation: 'modal',
+            animation: 'fade',
+            headerTransparent: true,
+            headerTitle: (props) => <ModalHeaderText />,
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => router.back()}
+                style={{
+                  backgroundColor: '#fff',
+                  borderColor: Colors.grey,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  padding: 4,
+                }}
+              >
+                <Ionicons name="close-outline" size={22} />
+              </TouchableOpacity>
+            ),
+          }}
         />
       </Stack>
     </ThemeProvider>

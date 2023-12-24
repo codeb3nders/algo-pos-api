@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { loginUser } from '../api/auth';
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
@@ -10,7 +11,7 @@ interface AuthProps {
 }
 
 const TOKEN_KEY = 'token';
-export const API_URL = 'http://localhost:3001';
+export const API_URL = 'http://127.0.0.1:3001';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
@@ -55,12 +56,9 @@ export const AuthProvider = ({ children }: any) => {
 
   const login = async (email: string, password: string): Promise<any> => {
     try {
-      const result = await axios.post(`${API_URL}/auth/login`, {
-        email,
-        password,
-      });
+      const result = await loginUser(email, password);
 
-      if (!result.data && !result.data.user.access_token) {
+      if (!result || !result.data.user.access_token) {
         return { error: true, msg: 'Invalid Credentials' };
       }
 
@@ -72,18 +70,15 @@ export const AuthProvider = ({ children }: any) => {
         user: { id: user._id, email: user.email },
       });
 
-      axios.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${user.access_token}`;
+      axios.defaults.headers.common['Authorization'] =
+        `Bearer ${user.access_token}`;
       await SecureStore.setItemAsync(TOKEN_KEY, JSON.stringify(user));
     } catch (error) {
-      console.log('ERROR--', error);
       return { error: true, msg: (error as any).response.data.msg };
     }
   };
 
   const logout = async () => {
-    console.log('LOGIN OUT');
     await SecureStore.deleteItemAsync(TOKEN_KEY);
     axios.defaults.headers.common['Authorization'] = '';
     await SecureStore.setItemAsync(TOKEN_KEY, '');

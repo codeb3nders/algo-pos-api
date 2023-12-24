@@ -1,31 +1,13 @@
 import * as React from 'react';
-import { Button, Text, TextInput, View, StyleSheet } from 'react-native';
+import { Button, Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginScreen from './screens/login';
 import COLOR from './colors';
+import { HomeScreen } from './screens/home';
 
-function HomeScreen({ navigation }: any) {
-  const auth: any = useAuth();
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => {
-          navigation.navigate('Details', {
-            itemId: 86,
-            otherParam: 'anything you want here',
-          });
-        }}
-      />
-
-      <Button title="Logout" onPress={() => auth.onLogout()} />
-    </View>
-  );
-}
 function SettingsScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -87,8 +69,6 @@ const Stack = createNativeStackNavigator();
 
 const StacksComponents = () => {
   const { authState, onLogout } = useAuth();
-
-  console.log('===authState', authState);
 
   return (
     <Stack.Navigator
