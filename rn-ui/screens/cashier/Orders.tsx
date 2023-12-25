@@ -27,7 +27,7 @@ const Orders = () => {
           const { orders } = voucher.orders[order];
 
           return orders.map((o) => {
-            return <Product item={o} />;
+            return <Product key={o.item} item={o} />;
           });
         })
       ) : (
@@ -70,7 +70,7 @@ const Product = ({ item }: { item: Order }) => {
             padding: 5,
           }}
         >
-          <Text style={{ fontSize: 12 }}>
+          <Text key={item.item} style={{ fontSize: 12 }}>
             {item.item} : {item.price} x {item.quantity} = {item.total}
           </Text>
         </TouchableOpacity>

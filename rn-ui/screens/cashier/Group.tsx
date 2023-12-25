@@ -17,13 +17,12 @@ const Group = ({ group, setCategory }: any) => {
         group.map((g: any) => {
           return (
             <TouchableOpacity
+              key={g.category}
               style={styles.groupLayout}
               onPress={() => setCategory(() => g.category)}
             >
               <View>
-                <Text key={g.category} style={styles.group}>
-                  {g.category}
-                </Text>
+                <Text style={styles.group}>{g.category}</Text>
               </View>
             </TouchableOpacity>
           );
