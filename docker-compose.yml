@@ -16,56 +16,56 @@ services:
   #   ports:
   #     - '4000:4000'
 
-  # inventory:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/inventory/Dockerfile
-  #     target: development
-  #   command: npm run start:dev inventory
-  #   env_file:
-  #     - ./apps/inventory/.env
-  #   depends_on:
-  #     # - mongo_db
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3005:3005'
+  inventory:
+    build:
+      context: .
+      dockerfile: ./apps/inventory/Dockerfile
+      target: development
+    command: npm run start:dev inventory
+    env_file:
+      - ./apps/inventory/.env
+    depends_on:
+      # - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3005:3005'
   
-  # orders:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/orders/Dockerfile
-  #     target: development
-  #   command: npm run start:dev orders
-  #   env_file:
-  #     - ./apps/orders/.env
-  #   depends_on:
-  #     # - mongo_db
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3002:3002'
+  orders:
+    build:
+      context: .
+      dockerfile: ./apps/orders/Dockerfile
+      target: development
+    command: npm run start:dev orders
+    env_file:
+      - ./apps/orders/.env
+    depends_on:
+      # - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3002:3002'
   
-  # products:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/products/Dockerfile
-  #     target: development
-  #   command: npm run start:dev products
-  #   env_file:
-  #     - ./apps/products/.env
-  #   depends_on:
-  #     # - mongo_db
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3003:3003'
+  products:
+    build:
+      context: .
+      dockerfile: ./apps/products/Dockerfile
+      target: development
+    command: npm run start:dev products
+    env_file:
+      - ./apps/products/.env
+    depends_on:
+      # - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3003:3003'
   
 
   auth:
@@ -85,22 +85,22 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
 
-  # items:
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/items/Dockerfile
-  #     target: development
-  #   command: npm run start:dev items
-  #   env_file:
-  #     - ./apps/items/.env
-  #   depends_on:
-  #     # - mongo_db
-  #     - rabbitmq
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - '3006:3006'
+  items:
+    build:
+      context: .
+      dockerfile: ./apps/items/Dockerfile
+      target: development
+    command: npm run start:dev items
+    env_file:
+      - ./apps/items/.env
+    depends_on:
+      # - mongo_db
+      - rabbitmq
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '3006:3006'
       
   rabbitmq:
     image: rabbitmq
