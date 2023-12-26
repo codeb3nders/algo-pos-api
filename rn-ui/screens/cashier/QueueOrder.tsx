@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { useOrderStore } from '../../store/order.store';
 import { Order } from '../../interface';
@@ -43,30 +43,32 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
           flexDirection: 'row',
         }}
       >
-        <Pressable
+        <TouchableOpacity
           onPress={() => {
-            quantity > 0 && setQuantity((quantity) => quantity - 1);
+            quantity > 1 && setQuantity((quantity) => quantity - 1);
           }}
         >
           <Text> - </Text>
-        </Pressable>
+        </TouchableOpacity>
         <Text> {quantity} </Text>
-        <Pressable onPress={() => setQuantity((quantity) => quantity + 1)}>
+        <TouchableOpacity
+          onPress={() => setQuantity((quantity) => quantity + 1)}
+        >
           <Text> + </Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
-      <Pressable
+      <TouchableOpacity
         style={[styles.button, styles.buttonClose]}
         onPress={() => cancelOrder()}
       >
         <Text style={styles.textStyle}>Cancel</Text>
-      </Pressable>
-      <Pressable
+      </TouchableOpacity>
+      <TouchableOpacity
         style={[styles.button, styles.buttonClose]}
         onPress={() => addQueueOrder()}
       >
         <Text style={styles.textStyle}>Add</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

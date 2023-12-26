@@ -2,15 +2,14 @@ import {
   View,
   Text,
   ScrollView,
-  SafeAreaView,
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GroupedOrderItem, Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
+import CommonModalComponent from './CommonModal';
 
 const Orders = () => {
   const orderStore = useOrderStore();
@@ -47,11 +46,44 @@ const Orders = () => {
 export default Orders;
 
 const Product = ({ item }: { item: Order }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const orderStore = useOrderStore();
+  const [updatedOrder, setUpdatedOrder] = useState<Order | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
+
+  useEffect(() => {}, [orderStore]);
 
   const deleteItem = (id: string) => {
     const result = orderStore.orders.filter((order) => order.itemId !== id);
     orderStore.updateOrder(result);
+    setModalVisible(!modalVisible);
+  };
+
+  const editItem = (item: Order) => {
+    // console.log('ORDER TO UPDATE', item);
+    setQuantity(item.quantity);
+    setUpdatedOrder(() => item);
+    setModalVisible(!modalVisible);
+  };
+
+  const updateOrderQuantity = (itemId: string) => {
+    const newQuantity = quantity; // Specify the new quantity
+
+    const updatedOrders = orderStore.orders.map((order) => {
+      if (order.itemId === itemId) {
+        // If the itemId matches, update the quantity
+        return {
+          ...order,
+          quantity: newQuantity,
+          total: order.price * newQuantity,
+        };
+      }
+      // If the itemId doesn't match, keep the order unchanged
+      return order;
+    });
+
+    setModalVisible(!modalVisible);
+    orderStore.updateOrder(updatedOrders);
   };
 
   return (
@@ -63,6 +95,7 @@ const Product = ({ item }: { item: Order }) => {
     >
       <View>
         <TouchableOpacity
+          onPress={() => editItem(item)}
           style={{
             height: 25,
             backgroundColor: 'gray',
@@ -74,11 +107,45 @@ const Product = ({ item }: { item: Order }) => {
             {item.item} : {item.price} x {item.quantity} = {item.total}
           </Text>
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => deleteItem(item.itemId)}>
-          <Text>X</Text>
-        </TouchableOpacity>
       </View>
+      <CommonModalComponent
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      >
+        <View>
+          <TouchableOpacity onPress={() => deleteItem(item.itemId)}>
+            <Text>X</Text>
+          </TouchableOpacity>
+          <Text> {updatedOrder && updatedOrder.item} </Text>
+          <TouchableOpacity
+            onPress={() => {
+              quantity > 1 && setQuantity((quantity) => quantity - 1);
+            }}
+          >
+            <Text> - </Text>
+          </TouchableOpacity>
+          <Text> {quantity} </Text>
+          <TouchableOpacity
+            onPress={() => setQuantity((quantity) => quantity + 1)}
+          >
+            <Text> + </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text style={styles.textStyle}>Cancel</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => updateOrderQuantity(item.itemId)}
+          >
+            <Text style={styles.textStyle}>Update</Text>
+          </TouchableOpacity>
+        </View>
+      </CommonModalComponent>
     </View>
   );
 };
@@ -111,5 +178,24 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     marginBottom: 20,
     paddingBottom: 20,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    width: 100,
+    height: 40,
+    margin: 2,
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

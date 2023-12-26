@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CommonModalComponent from './CommonModal';
 import Orders from './Orders';
@@ -16,14 +16,14 @@ const Basket = () => {
 
   return (
     <View>
-      <Pressable
+      <TouchableOpacity
         style={[styles.button, styles.buttonClose]}
         onPress={() => setModalVisible(!modalVisible)}
       >
         <Text style={styles.textStyle}>{`${voucher.totalQuantity} item${
           orders.length > 1 ? 's' : ''
         }`}</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       <CommonModalComponent
         modalVisible={modalVisible}
@@ -31,18 +31,18 @@ const Basket = () => {
       >
         <Orders />
         <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
-          <Pressable
+          <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}
           >
             <Text style={styles.textStyle}>Close</Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}
           >
             <Text style={styles.textStyle}>Pay</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </CommonModalComponent>
     </View>

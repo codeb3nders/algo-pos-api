@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 import Orders from './Orders';
