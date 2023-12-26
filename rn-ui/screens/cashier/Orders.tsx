@@ -10,48 +10,19 @@ import React, { useEffect, useState } from 'react';
 import { GroupedOrderItem, Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 import CommonModalComponent from './CommonModal';
+import { AntDesign } from '@expo/vector-icons';
 
 const Orders = () => {
   const orderStore = useOrderStore();
   const { orders, voucher, createVoucher } = orderStore;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [updatedOrder, setUpdatedOrder] = useState<Order | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [selectedId, setSelectedId] = useState<string>('');
 
   useEffect(() => {
     createVoucher(orders);
   }, [orders]);
-
-  return (
-    <ScrollView style={styles.scrollView}>
-      {voucher && voucher.totalQuantity ? (
-        Object.keys(voucher.orders).map((order) => {
-          const { orders } = voucher.orders[order];
-
-          return orders.map((o) => {
-            return <Product key={o.item} item={o} />;
-          });
-        })
-      ) : (
-        <Text>No Item</Text>
-      )}
-      <View>
-        <Text> - - - - - - - - - - - - - - - - - -</Text>
-        <Text style={{ fontSize: 12 }}>
-          Total item: {voucher?.totalQuantity} Total Amount:{' '}
-          {voucher?.totalPrice}
-        </Text>
-      </View>
-    </ScrollView>
-  );
-};
-
-export default Orders;
-
-const Product = ({ item }: { item: Order }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const orderStore = useOrderStore();
-  const [updatedOrder, setUpdatedOrder] = useState<Order | null>(null);
-  const [quantity, setQuantity] = useState<number>(1);
-
-  useEffect(() => {}, [orderStore]);
 
   const deleteItem = (id: string) => {
     const result = orderStore.orders.filter((order) => order.itemId !== id);
@@ -59,14 +30,10 @@ const Product = ({ item }: { item: Order }) => {
     setModalVisible(!modalVisible);
   };
 
-  const editItem = (item: Order) => {
-    // console.log('ORDER TO UPDATE', item);
-    setQuantity(item.quantity);
-    setUpdatedOrder(() => item);
-    setModalVisible(!modalVisible);
-  };
+  console.log('IDDDDD', selectedId);
 
-  const updateOrderQuantity = (itemId: string) => {
+  const updateOrderQuantity = (itemId: string | null) => {
+    console.log('HERE');
     const newQuantity = quantity; // Specify the new quantity
 
     const updatedOrders = orderStore.orders.map((order) => {
@@ -87,49 +54,70 @@ const Product = ({ item }: { item: Order }) => {
   };
 
   return (
-    <View
-      style={{
-        alignItems: 'stretch',
-        padding: 10,
-      }}
-    >
+    <ScrollView style={styles.scrollView}>
+      {voucher && voucher.totalQuantity ? (
+        Object.keys(voucher.orders).map((order) => {
+          const { orders } = voucher.orders[order];
+
+          return orders.map((o) => {
+            return (
+              <Product
+                key={`c-${o.itemId}`}
+                item={o}
+                setQuantity={setQuantity}
+                setUpdatedOrder={setUpdatedOrder}
+                setModalVisible={setModalVisible}
+                modalVisible={modalVisible}
+                selectedId={selectedId}
+                setSelectedId={setSelectedId}
+              />
+            );
+          });
+        })
+      ) : (
+        <Text>No Item</Text>
+      )}
       <View>
-        <TouchableOpacity
-          onPress={() => editItem(item)}
-          style={{
-            height: 25,
-            backgroundColor: 'gray',
-            margin: 5,
-            padding: 5,
-          }}
-        >
-          <Text key={item.item} style={{ fontSize: 12 }}>
-            {item.item} : {item.price} x {item.quantity} = {item.total}
-          </Text>
-        </TouchableOpacity>
+        <Text> - - - - - - - - - - - - - - - - - -</Text>
+        <Text style={{ fontSize: 12 }}>
+          Total item: {voucher?.totalQuantity} Total Amount:{' '}
+          {voucher?.totalPrice}
+        </Text>
       </View>
       <CommonModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       >
         <View>
-          <TouchableOpacity onPress={() => deleteItem(item.itemId)}>
-            <Text>X</Text>
+          <TouchableOpacity onPress={() => deleteItem(selectedId)}>
+            <View className="flex justify-center items-center w-7 h-7 mb-5">
+              <AntDesign name="delete" size={24} color="black" />
+            </View>
           </TouchableOpacity>
-          <Text> {updatedOrder && updatedOrder.item} </Text>
-          <TouchableOpacity
-            onPress={() => {
-              quantity > 1 && setQuantity((quantity) => quantity - 1);
-            }}
-          >
-            <Text> - </Text>
-          </TouchableOpacity>
-          <Text> {quantity} </Text>
-          <TouchableOpacity
-            onPress={() => setQuantity((quantity) => quantity + 1)}
-          >
-            <Text> + </Text>
-          </TouchableOpacity>
+          <View className="items-center mb-10 w-64">
+            <Text className="font-bold capitalize">
+              {updatedOrder && updatedOrder.item}{' '}
+              {updatedOrder && updatedOrder?.option}: {updatedOrder?.price} x{' '}
+              {quantity}
+            </Text>
+            <View className="mt-5 fle flex-row">
+              <TouchableOpacity
+                className="mr-5"
+                onPress={() => {
+                  quantity > 1 && setQuantity((quantity) => quantity - 1);
+                }}
+              >
+                <AntDesign name="minuscircleo" size={24} color="black" />
+              </TouchableOpacity>
+              <Text> -- </Text>
+              <TouchableOpacity
+                className="ml-5"
+                onPress={() => setQuantity((quantity) => quantity + 1)}
+              >
+                <AntDesign name="pluscircleo" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
           <TouchableOpacity
@@ -140,12 +128,64 @@ const Product = ({ item }: { item: Order }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
-            onPress={() => updateOrderQuantity(item.itemId)}
+            onPress={() => updateOrderQuantity(selectedId)}
           >
             <Text style={styles.textStyle}>Update</Text>
           </TouchableOpacity>
         </View>
       </CommonModalComponent>
+    </ScrollView>
+  );
+};
+
+export default Orders;
+
+const Product = ({
+  item,
+  setQuantity,
+  setUpdatedOrder,
+  setModalVisible,
+  modalVisible,
+  selectedId,
+  setSelectedId,
+}: {
+  item: Order;
+  setQuantity: any;
+  setUpdatedOrder: any;
+  setModalVisible: any;
+  modalVisible: boolean;
+  selectedId: string;
+  setSelectedId: any;
+}) => {
+  const orderStore = useOrderStore();
+
+  useEffect(() => {}, [orderStore]);
+
+  const editItem = (item: Order) => {
+    setSelectedId(item.itemId);
+    setQuantity(item.quantity);
+    setUpdatedOrder(() => item);
+    setModalVisible(!modalVisible);
+  };
+
+  return (
+    <View
+      style={{
+        alignItems: 'stretch',
+        // padding: 10,
+      }}
+    >
+      <View>
+        <TouchableOpacity
+          className="capitalize bg-blue-200  m-1 p-1"
+          onPress={() => editItem(item)}
+        >
+          <Text key={item.itemId} style={{ fontSize: 12 }}>
+            {item.item} {item.option} : {item.price} x {item.quantity} ={' '}
+            {item.total}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

@@ -6,8 +6,9 @@ export interface ItemStore {
 
 export interface Order {
   customer: any;
-  date: string;
+  date: Date;
   item: string;
+  option: string;
   itemId: string;
   price: number;
   quantity: number;
@@ -57,10 +58,11 @@ export interface Item {
 export interface Order {
   itemId: string;
   item: string;
+  option: string;
   quantity: number;
   price: number;
   total: number;
-  date: string;
+  date: Date;
   customer: any;
   status: any;
 }

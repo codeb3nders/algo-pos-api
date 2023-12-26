@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useItemStore } from '../../store/item.store';
 import { Item } from '../../interface';
@@ -17,7 +23,7 @@ const Cashier = () => {
   const itemsStore = useItemStore();
   const orderStore = useOrderStore();
   const { items, loadingData } = itemsStore;
-  const { setQueueOrder, queueOrder } = orderStore;
+  const { setQueueOrder } = orderStore;
 
   useEffect(() => {
     itemsStore.loadItems();
@@ -77,8 +83,8 @@ const Cashier = () => {
         style={styles.itemLayout}
         onPress={() => handleOnPress(item)}
       >
-        <Text style={styles.item} key={item.item}>
-          {item.category} - {item.item} - {item.price}
+        <Text style={styles.item} key={item._id}>
+          {item.item} {item.option}
         </Text>
       </TouchableOpacity>
     );
@@ -89,22 +95,25 @@ const Cashier = () => {
       {group && (
         <Group group={group} category={category} setCategory={setCategory} />
       )}
-
-      <View
+      <ScrollView
         style={{
-          flex: 1,
-          flexDirection: 'row',
-          flexWrap: 'wrap',
+          position: 'absolute',
+          bottom: 10,
+          height: 490,
         }}
       >
-        {selectedCategory.length ? (
-          selectedCategory.map((item: Item, id: number) => {
-            return <Item key={item.item} item={item} />;
-          })
-        ) : (
-          <Text>Select Item</Text>
-        )}
-      </View>
+        <View className="flex, justify-center flex-row flex-wrap">
+          {selectedCategory.length ? (
+            selectedCategory.map((item: Item, id: number) => {
+              return <Item key={`b-${id}`} item={item} />;
+            })
+          ) : (
+            <View className="h-96 w-full justify-center items-center">
+              <Text>Select Category</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
       <View>
         <CommonModalComponent
           modalVisible={modalVisible}

@@ -4,30 +4,34 @@ import { StyleSheet } from 'react-native';
 
 const Group = ({ group, setCategory }: any) => {
   return (
-    <ScrollView
-      horizontal={true}
+    <View
       style={{
         flex: 1,
         flexDirection: 'row',
+        justifyContent: 'center',
         maxHeight: 70,
         padding: 5,
       }}
     >
-      {group &&
-        group.map((g: any) => {
-          return (
-            <TouchableOpacity
-              key={g.category}
-              style={styles.groupLayout}
-              onPress={() => setCategory(() => g.category)}
-            >
-              <View>
-                <Text style={styles.group}>{g.category}</Text>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-    </ScrollView>
+      <View>
+        <ScrollView horizontal={true}>
+          {group &&
+            group.map((g: any) => {
+              return (
+                <TouchableOpacity
+                  key={`a-${g.category}`}
+                  style={styles.groupLayout}
+                  onPress={() => setCategory(() => g.category)}
+                >
+                  <View>
+                    <Text style={styles.group}>{g.category}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+        </ScrollView>
+      </View>
+    </View>
   );
 };
 

@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { useOrderStore } from '../../store/order.store';
 import { Order } from '../../interface';
+import { AntDesign } from '@expo/vector-icons';
 
 const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
   const userOrder = useOrderStore();
@@ -14,6 +15,7 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
     const order: Order = {
       itemId: queueOrder?._id,
       item: queueOrder.item,
+      option: queueOrder.option,
       quantity,
       price: queueOrder.price,
       total: queueOrder.price * quantity,
@@ -35,40 +37,43 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
 
   return (
     <View style={styles.centeredView}>
-      <Text>{queueOrder?.item}</Text>
-      <View
-        style={{
-          ...styles.modalText,
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <Text className="font-bold capitalize">
+        {queueOrder && queueOrder.item} {queueOrder && queueOrder?.option}:{' '}
+        {queueOrder?.price} x {quantity}
+      </Text>
+
+      <View className="mt-5 fle flex-row mb-10">
         <TouchableOpacity
+          className="mr-5"
           onPress={() => {
             quantity > 1 && setQuantity((quantity) => quantity - 1);
           }}
         >
-          <Text> - </Text>
+          <AntDesign name="minuscircleo" size={24} color="black" />
         </TouchableOpacity>
-        <Text> {quantity} </Text>
+        <Text> -- </Text>
         <TouchableOpacity
+          className="ml-5"
           onPress={() => setQuantity((quantity) => quantity + 1)}
         >
-          <Text> + </Text>
+          <AntDesign name="pluscircleo" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={[styles.button, styles.buttonClose]}
-        onPress={() => cancelOrder()}
-      >
-        <Text style={styles.textStyle}>Cancel</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, styles.buttonClose]}
-        onPress={() => addQueueOrder()}
-      >
-        <Text style={styles.textStyle}>Add</Text>
-      </TouchableOpacity>
+
+      <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => cancelOrder()}
+        >
+          <Text style={styles.textStyle}>Cancel</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonClose]}
+          onPress={() => addQueueOrder()}
+        >
+          <Text style={styles.textStyle}>Add</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

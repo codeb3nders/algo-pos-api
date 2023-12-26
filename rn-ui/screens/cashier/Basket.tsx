@@ -15,14 +15,12 @@ const Basket = () => {
   if (!voucher || !voucher.totalQuantity) return;
 
   return (
-    <View>
+    <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
       <TouchableOpacity
-        style={[styles.button, styles.buttonClose]}
+        style={[styles.button, styles.buttonCtr]}
         onPress={() => setModalVisible(!modalVisible)}
       >
-        <Text style={styles.textStyle}>{`${voucher.totalQuantity} item${
-          orders.length > 1 ? 's' : ''
-        }`}</Text>
+        <Text style={styles.textStyle}>{voucher.totalQuantity}</Text>
       </TouchableOpacity>
 
       <CommonModalComponent
@@ -78,6 +76,10 @@ const styles = StyleSheet.create({
   buttonClose: {
     width: 100,
     height: 40,
+    margin: 2,
+    backgroundColor: '#2196F3',
+  },
+  buttonCtr: {
     margin: 2,
     backgroundColor: '#2196F3',
   },
