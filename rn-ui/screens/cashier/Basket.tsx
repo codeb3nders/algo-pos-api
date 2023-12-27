@@ -19,15 +19,6 @@ const Basket = () => {
   if (!voucher || !voucher.totalQuantity) return;
 
   const paymentProcess = () => {
-    // console.log(
-    //   'PAYMENT PROCESS',
-    //   voucher.totalPrice,
-    //   voucher.orders,
-    //   discount,
-    // );
-
-    // const voucher = {"xxxxsometing": {"orders": [Array], "totalItemsByItem": 2, "totalPriceByItem": 24}}, "totalPrice": 24, "totalQuantity": 2}
-
     const orderData: Sales = {
       customer: 'JM Copino',
       orders: orders,

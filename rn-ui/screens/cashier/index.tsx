@@ -121,7 +121,6 @@ const Cashier = () => {
     <SafeAreaView
       style={{
         flex: 1,
-        // backgroundColor: 'yellow',
       }}
     >
       <Group group={group} category={category} setCategory={setCategory} />
@@ -129,14 +128,7 @@ const Cashier = () => {
         className=" flex align-item-center shadow-md m-2"
         style={{ height: '80%' }}
       >
-        <ScrollView
-          style={
-            {
-              // position: 'relative',
-              // bottom: 10,
-            }
-          }
-        >
+        <ScrollView>
           <View className="flex justify-center align-top flex-row flex-wrap">
             {selectedCategory.length ? (
               selectedCategory.map((item: Item, id: number) => {
