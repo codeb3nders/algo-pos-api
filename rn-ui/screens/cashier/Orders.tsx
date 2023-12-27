@@ -11,6 +11,8 @@ import { GroupedOrderItem, Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 import CommonModalComponent from './CommonModal';
 import { AntDesign } from '@expo/vector-icons';
+import { useSalesStore } from '../../store/sales.store';
+import { DISCOUNT } from '../../constant';
 
 const Orders = () => {
   const orderStore = useOrderStore();
@@ -19,18 +21,19 @@ const Orders = () => {
   const [updatedOrder, setUpdatedOrder] = useState<Order | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedId, setSelectedId] = useState<string>('');
+  const { sales, discount, setDiscount, vat } = useSalesStore();
 
   useEffect(() => {
+    console.log('SALES', sales?.length);
+    setDiscount(DISCOUNT[0]);
     createVoucher(orders);
-  }, [orders]);
+  }, [orders, sales, discount]);
 
   const deleteItem = (id: string) => {
     const result = orderStore.orders.filter((order) => order.itemId !== id);
     orderStore.updateOrder(result);
     setModalVisible(!modalVisible);
   };
-
-  console.log('IDDDDD', selectedId);
 
   const updateOrderQuantity = (itemId: string | null) => {
     console.log('HERE');
@@ -77,11 +80,23 @@ const Orders = () => {
       ) : (
         <Text>No Item</Text>
       )}
-      <View>
-        <Text> - - - - - - - - - - - - - - - - - -</Text>
-        <Text style={{ fontSize: 12 }}>
+      <View className="items-end  m-2 p-2" style={{ borderTopWidth: 1 }}>
+        <Text>
           Total item: {voucher?.totalQuantity} Total Amount:{' '}
           {voucher?.totalPrice}
+        </Text>
+        <Text>
+          Discount for {discount && discount.type} :{' '}
+          {discount && discount.value}
+        </Text>
+        <Text
+          className="border-t-2 font-bold items-end   mt-2 p-2"
+          style={{ fontSize: 16, borderTopWidth: 1 }}
+        >
+          {`Total Amount: ${
+            voucher?.totalPrice &&
+            voucher?.totalPrice - (discount ? discount.value : 0)
+          }`}
         </Text>
       </View>
       <CommonModalComponent
@@ -109,7 +124,7 @@ const Orders = () => {
               >
                 <AntDesign name="minuscircleo" size={24} color="black" />
               </TouchableOpacity>
-              <Text> -- </Text>
+              <Text> {'<-->'} </Text>
               <TouchableOpacity
                 className="ml-5"
                 onPress={() => setQuantity((quantity) => quantity + 1)}
@@ -170,22 +185,24 @@ const Product = ({
 
   return (
     <View
+      className="flex"
       style={{
         alignItems: 'stretch',
-        // padding: 10,
       }}
     >
-      <View>
-        <TouchableOpacity
-          className="capitalize bg-blue-200  m-1 p-1"
-          onPress={() => editItem(item)}
+      <TouchableOpacity
+        className="  rounded-lg m-1 border-b-2 border-r-2 border-gray-300 shadow-lg"
+        onPress={() => editItem(item)}
+      >
+        <Text
+          className="capitalize   m-1 p-1"
+          key={item.itemId}
+          style={{ fontSize: 12 }}
         >
-          <Text key={item.itemId} style={{ fontSize: 12 }}>
-            {item.item} {item.option} : {item.price} x {item.quantity} ={' '}
-            {item.total}
-          </Text>
-        </TouchableOpacity>
-      </View>
+          {item.item} {item.option} : {item.price} x {item.quantity} ={' '}
+          {item.total}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -212,9 +229,7 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   scrollView: {
-    backgroundColor: 'pink',
     maxHeight: 400,
-    // marginTop: 20,
     paddingRight: 30,
     marginBottom: 20,
     paddingBottom: 20,

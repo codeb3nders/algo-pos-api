@@ -4,6 +4,32 @@ export interface ItemStore {
   loadingData: boolean;
 }
 
+export interface Sales {
+  customer: string;
+  orders: any;
+  status: string;
+  paymentMethod: string;
+  date: Date;
+  amount: number;
+  discount: number;
+  Vat: number;
+}
+
+export interface Discount {
+  type: string;
+  value: number;
+}
+
+export interface SalesStore {
+  sales: Sales[];
+  discount: Discount | null;
+  vat: Discount | null;
+  isSaving: boolean;
+  saveSales: (sales: Sales) => void;
+  setDiscount: (discount: Discount) => void;
+  setVat: (vat: Discount) => void;
+}
+
 export interface Order {
   customer: any;
   date: Date;
@@ -45,14 +71,15 @@ export interface Item {
   _id: string;
   category: string;
   item: string;
+  image: string;
   option: string;
   price: number;
   cost: number;
   modifier: number;
-  customer?: string;
   onlineStoreAvailability: boolean;
   onlineStoreDescription: string;
   VATExempt: boolean;
+  customer?: string;
 }
 
 export interface Order {

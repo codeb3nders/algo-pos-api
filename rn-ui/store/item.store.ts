@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { getItems } from '../api/item';
-import { ItemStore } from '../interface';
+import { Item, ItemStore } from '../interface';
 
 export const useItemStore = create<ItemStore>((set) => ({
   items: [],
@@ -8,7 +8,7 @@ export const useItemStore = create<ItemStore>((set) => ({
   loadItems: async () => {
     try {
       set({ loadingData: true });
-      const response = await getItems();
+      const response: Item[] = await getItems();
       set({ items: response });
     } catch {
       // Todo show error

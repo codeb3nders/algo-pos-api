@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Image,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useItemStore } from '../../store/item.store';
@@ -79,11 +80,34 @@ const Cashier = () => {
   };
 
   const Item = ({ item }: { item: Item }) => {
+    const imagelink = item.image;
+
     return (
       <TouchableOpacity
-        style={styles.itemLayout}
+        className="w-24 h-30 rounded-md bg-red-100 m-1 p-1"
+        style={{
+          shadowColor: 'black',
+          shadowOpacity: 0.26,
+          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 10,
+          elevation: 5,
+          backgroundColor: 'white',
+        }}
         onPress={() => handleOnPress(item)}
       >
+        {!imagelink ? (
+          <Image
+            className="rounded-xl"
+            style={{ alignSelf: 'center', width: 90, height: 70 }}
+            source={require(`../../assets/icon.png`)}
+          />
+        ) : (
+          <Image
+            className="rounded-xl"
+            style={{ alignSelf: 'center', width: 90, height: 70 }}
+            source={{ uri: `${imagelink}` }}
+          />
+        )}
         <Text style={styles.item} key={item._id}>
           {item.item} {item.option}
         </Text>
@@ -91,44 +115,27 @@ const Cashier = () => {
     );
   };
 
-  // const messages = ['one', 'two', 'three'];
-
-  var messages: string[] = [];
-  for (var i = 1; i <= 19; i++) {
-    messages.push(`${i.toString()} - some string`);
-  }
-  const Messages = () => {
-    return messages.map((m) => (
-      <Text className="bg-orange-300 h-10 w-10 m-2">{m}</Text>
-    ));
-  };
+  // 09178421364 kevin pillon
 
   return (
-    <SafeAreaView>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        // backgroundColor: 'yellow',
+      }}
+    >
+      <Group group={group} category={category} setCategory={setCategory} />
       <View
-        style={{
-          height: '20%',
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'center',
-          maxHeight: 70,
-          padding: 5,
-        }}
-      >
-        <Group group={group} category={category} setCategory={setCategory} />
-        {/* {group && (
-          <Group group={group} category={category} setCategory={setCategory} />
-        )} */}
-      </View>
-      <View
-        className="bg-violet-300 flex align-item-center"
+        className=" flex align-item-center shadow-md m-2"
         style={{ height: '80%' }}
       >
         <ScrollView
-          style={{
-            position: 'relative',
-            bottom: 10,
-          }}
+          style={
+            {
+              // position: 'relative',
+              // bottom: 10,
+            }
+          }
         >
           <View className="flex justify-center align-top flex-row flex-wrap">
             {selectedCategory.length ? (
@@ -141,29 +148,6 @@ const Cashier = () => {
               </View>
             )}
           </View>
-        </ScrollView>
-
-        {/* <ScrollView
-          style={{
-            position: 'relative',
-            backgroundColor: 'orange',
-            bottom: 10,
-            height: 490,
-          }}
-        >
-          <View className="flex justify-center align-top flex-row flex-wrap">
-            {selectedCategory.length ? (
-              selectedCategory.map((item: Item, id: number) => {
-                return <Item key={`b-${id}`} item={item} />;
-              })
-            ) : (
-              <View className="h-96 w-full justify-center items-center">
-                <Text>Select Category</Text>
-              </View>
-            )}
-          </View>
-        </ScrollView>
-        <View>
           <CommonModalComponent
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
@@ -173,7 +157,8 @@ const Cashier = () => {
               setModalVisible={setModalVisible}
             />
           </CommonModalComponent>
-        </View> */}
+        </ScrollView>
+
         <Basket />
       </View>
     </SafeAreaView>
@@ -187,7 +172,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#fff',
-    backgroundColor: '#ffdead',
+    backgroundColor: 'white',
     height: 100,
     width: 100,
     margin: 5,
@@ -196,7 +181,7 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 5,
     textAlign: 'center',
-    textAlignVertical: 'center',
+    textAlignVertical: 'top',
   },
   button: {
     borderRadius: 20,

@@ -3,16 +3,48 @@ import React, { useEffect, useState } from 'react';
 import CommonModalComponent from './CommonModal';
 import Orders from './Orders';
 import { useOrderStore } from '../../store/order.store';
+import { Order, Sales } from '../../interface';
+import { saveSales } from '../../api/sales';
+import { useSalesStore } from '../../store/sales.store';
 
 const Basket = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { orders, voucher, createVoucher } = useOrderStore();
+  const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
+  const { saveSales, discount, vat } = useSalesStore();
 
   useEffect(() => {
     createVoucher(orders);
   }, [orders]);
 
   if (!voucher || !voucher.totalQuantity) return;
+
+  const paymentProcess = () => {
+    // console.log(
+    //   'PAYMENT PROCESS',
+    //   voucher.totalPrice,
+    //   voucher.orders,
+    //   discount,
+    // );
+
+    // const voucher = {"xxxxsometing": {"orders": [Array], "totalItemsByItem": 2, "totalPriceByItem": 24}}, "totalPrice": 24, "totalQuantity": 2}
+
+    const orderData: Sales = {
+      customer: 'JM Copino',
+      orders: orders,
+      status: 'paid',
+      paymentMethod: 'cash',
+      date: new Date(),
+      amount: voucher.totalPrice - (discount ? discount.value : 0),
+      discount: discount ? discount.value : 0,
+      Vat: 10,
+    };
+
+    saveSales(orderData);
+
+    updateOrder([]);
+
+    setModalVisible(!modalVisible);
+  };
 
   return (
     <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
@@ -37,7 +69,7 @@ const Basket = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
+            onPress={() => paymentProcess()}
           >
             <Text style={styles.textStyle}>Pay</Text>
           </TouchableOpacity>
