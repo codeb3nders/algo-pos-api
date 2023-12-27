@@ -88,6 +88,7 @@ export interface Order {
   option: string;
   quantity: number;
   price: number;
+  deduction: { name: string; value: number };
   total: number;
   date: Date;
   customer: any;

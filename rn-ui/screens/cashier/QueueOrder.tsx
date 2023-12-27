@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useOrderStore } from '../../store/order.store';
 import { Order } from '../../interface';
 import { AntDesign } from '@expo/vector-icons';
+import SelectDropdown from 'react-native-select-dropdown';
+import { DISCOUNT } from '../../constant';
 
 const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
   const userOrder = useOrderStore();
@@ -59,6 +61,31 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
           <AntDesign name="pluscircleo" size={24} color="black" />
         </TouchableOpacity>
       </View>
+
+      <SelectDropdown
+        rowStyle={{ backgroundColor: 'pink' }}
+        buttonTextStyle={{ textTransform: 'capitalize' }}
+        defaultButtonText="Apply discount"
+        selectedRowTextStyle={{
+          textTransform: 'capitalize',
+          fontWeight: 'bold',
+        }}
+        rowTextStyle={{ textTransform: 'capitalize' }}
+        data={DISCOUNT}
+        onSelect={(selectedItem, index) => {
+          console.log(selectedItem, index);
+        }}
+        buttonTextAfterSelection={(selectedItem, index) => {
+          // text represented after item is selected
+          // if data array is an array of objects then return selectedItem.property to render after item is selected
+          return `Discount: ${selectedItem.value * 100}%`;
+        }}
+        rowTextForSelection={(item, index) => {
+          // text represented for each item in dropdown
+          // if data array is an array of objects then return item.property to represent item in dropdown
+          return item.type;
+        }}
+      />
 
       <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
         <TouchableOpacity
