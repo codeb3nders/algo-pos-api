@@ -13,6 +13,7 @@ import { useOrderStore } from '../../store/order.store';
 import CommonModalComponent from './CommonModal';
 import QueueOrder from './QueueOrder';
 import Basket from './Basket';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Cashier = () => {
   const [category, setCategory] = useState('');
@@ -90,43 +91,92 @@ const Cashier = () => {
     );
   };
 
+  // const messages = ['one', 'two', 'three'];
+
+  var messages: string[] = [];
+  for (var i = 1; i <= 19; i++) {
+    messages.push(`${i.toString()} - some string`);
+  }
+  const Messages = () => {
+    return messages.map((m) => (
+      <Text className="bg-orange-300 h-10 w-10 m-2">{m}</Text>
+    ));
+  };
+
   return (
-    <>
-      {group && (
-        <Group group={group} category={category} setCategory={setCategory} />
-      )}
-      <ScrollView
+    <SafeAreaView>
+      <View
         style={{
-          position: 'absolute',
-          bottom: 10,
-          height: 490,
+          height: '20%',
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'center',
+          maxHeight: 70,
+          padding: 5,
         }}
       >
-        <View className="flex, justify-center flex-row flex-wrap">
-          {selectedCategory.length ? (
-            selectedCategory.map((item: Item, id: number) => {
-              return <Item key={`b-${id}`} item={item} />;
-            })
-          ) : (
-            <View className="h-96 w-full justify-center items-center">
-              <Text>Select Category</Text>
-            </View>
-          )}
-        </View>
-      </ScrollView>
-      <View>
-        <CommonModalComponent
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
+        <Group group={group} category={category} setCategory={setCategory} />
+        {/* {group && (
+          <Group group={group} category={category} setCategory={setCategory} />
+        )} */}
+      </View>
+      <View
+        className="bg-violet-300 flex align-item-center"
+        style={{ height: '80%' }}
+      >
+        <ScrollView
+          style={{
+            position: 'relative',
+            bottom: 10,
+          }}
         >
-          <QueueOrder
+          <View className="flex justify-center align-top flex-row flex-wrap">
+            {selectedCategory.length ? (
+              selectedCategory.map((item: Item, id: number) => {
+                return <Item key={`b-${id}`} item={item} />;
+              })
+            ) : (
+              <View className="h-96 w-full justify-center items-center">
+                <Text>Select Category</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+
+        {/* <ScrollView
+          style={{
+            position: 'relative',
+            backgroundColor: 'orange',
+            bottom: 10,
+            height: 490,
+          }}
+        >
+          <View className="flex justify-center align-top flex-row flex-wrap">
+            {selectedCategory.length ? (
+              selectedCategory.map((item: Item, id: number) => {
+                return <Item key={`b-${id}`} item={item} />;
+              })
+            ) : (
+              <View className="h-96 w-full justify-center items-center">
+                <Text>Select Category</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+        <View>
+          <CommonModalComponent
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-          />
-        </CommonModalComponent>
+          >
+            <QueueOrder
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+            />
+          </CommonModalComponent>
+        </View> */}
+        <Basket />
       </View>
-      <Basket />
-    </>
+    </SafeAreaView>
   );
 };
 
