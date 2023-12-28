@@ -19,7 +19,7 @@ const Group = ({ group, setCategory }: any) => {
             group.map((g: any) => {
               return (
                 <TouchableOpacity
-                  className="bg-algo-green-1 px-2 h-10 rounded-lg"
+                  className="bg-algo-green-1 px-2 h-10 rounded-lg mx-1"
                   style={{
                     shadowColor: 'black',
                     shadowOpacity: 0.26,
