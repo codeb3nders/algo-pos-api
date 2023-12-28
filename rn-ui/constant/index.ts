@@ -1,4 +1,5 @@
 export const DISCOUNT = [
+  { type: 'none', value: 0 },
   { type: 'senior', value: 0.2 },
   { type: 'employee', value: 0.1 },
   { type: 'promo', value: 0.15 },

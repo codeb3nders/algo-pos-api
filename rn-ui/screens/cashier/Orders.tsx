@@ -24,8 +24,6 @@ const Orders = () => {
   const { sales, discount, setDiscount, vat } = useSalesStore();
 
   useEffect(() => {
-    console.log('SALES', sales?.length);
-    setDiscount(DISCOUNT[0]);
     createVoucher(orders);
   }, [orders, sales, discount]);
 
@@ -36,7 +34,6 @@ const Orders = () => {
   };
 
   const updateOrderQuantity = (itemId: string | null) => {
-    console.log('HERE');
     const newQuantity = quantity; // Specify the new quantity
 
     const updatedOrders = orderStore.orders.map((order) => {
@@ -183,6 +180,12 @@ const Product = ({
     setModalVisible(!modalVisible);
   };
 
+  const itm = item ? item.item : '';
+  const price = item ? item.price : 0;
+  const deduct = item.deduction ? item.deduction.value : 0;
+  const opt = item ? item.option : 0;
+  const quantity = item ? item.quantity : 0;
+
   return (
     <View
       className="flex"
@@ -199,8 +202,9 @@ const Product = ({
           key={item.itemId}
           style={{ fontSize: 12 }}
         >
-          {item.item} {item.option} : {item.price} x {item.quantity} ={' '}
-          {item.total}
+          {itm} {opt}: {price} x {quantity}
+          {deduct > 0 && ' - '}
+          {deduct > 0 && deduct} = {price * quantity - deduct}
         </Text>
       </TouchableOpacity>
     </View>

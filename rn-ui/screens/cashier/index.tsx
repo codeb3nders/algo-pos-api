@@ -15,6 +15,8 @@ import CommonModalComponent from './CommonModal';
 import QueueOrder from './QueueOrder';
 import Basket from './Basket';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AlertComponent from '../../components/AlertComponent';
+import { useSalesStore } from '../../store/sales.store';
 
 const Cashier = () => {
   const [category, setCategory] = useState('');
@@ -24,12 +26,15 @@ const Cashier = () => {
 
   const itemsStore = useItemStore();
   const orderStore = useOrderStore();
-  const { items, loadingData } = itemsStore;
+  const salesStore = useSalesStore();
+  const { items, loadingData, loadItems } = itemsStore;
   const { setQueueOrder } = orderStore;
+  const { sales, getParked } = salesStore;
 
   useEffect(() => {
-    itemsStore.loadItems();
-  }, []);
+    loadItems();
+    getParked();
+  }, [sales]);
 
   useEffect(() => {
     groupedItem();
@@ -123,6 +128,7 @@ const Cashier = () => {
         flex: 1,
       }}
     >
+      <AlertComponent />
       <Group group={group} category={category} setCategory={setCategory} />
       <View
         className=" flex align-item-center shadow-md m-2"

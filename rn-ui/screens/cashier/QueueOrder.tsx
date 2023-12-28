@@ -10,9 +10,15 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
   const userOrder = useOrderStore();
   const { addOrder, queueOrder, setQueueOrder } = userOrder;
   const [quantity, setQuantity] = useState<number>(1);
+  const [deduction, setDeduction] = useState<{
+    type: string;
+    value: number;
+  } | null>(null);
 
   const addQueueOrder = () => {
     if (!queueOrder) return;
+    const newTotal =
+      queueOrder.price * quantity - (deduction ? deduction.value : 0);
 
     const order: Order = {
       itemId: queueOrder?._id,
@@ -20,11 +26,13 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
       option: queueOrder.option,
       quantity,
       price: queueOrder.price,
-      total: queueOrder.price * quantity,
+      total: newTotal,
+      deduction,
       date: new Date(),
       customer: queueOrder.customer,
       status: null,
     };
+
     addOrder(order);
     setQueueOrder(null);
     setQuantity(1);
@@ -37,13 +45,18 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
     setModalVisible(!modalVisible);
   };
 
+  const item = queueOrder ? queueOrder.item : '';
+  const price = queueOrder ? queueOrder.price : 0;
+  const deduct = deduction ? deduction.value : 0;
+  const opt = queueOrder ? queueOrder.option : 0;
+
   return (
     <View style={styles.centeredView}>
       <Text className="font-bold capitalize">
-        {queueOrder && queueOrder.item} {queueOrder && queueOrder?.option}:{' '}
-        {queueOrder?.price} x {quantity}
+        {item} {opt}: {price} x {quantity}
+        {deduct > 0 && ' - '}
+        {deduct > 0 && deduct} = {price * quantity - deduct}
       </Text>
-
       <View className="mt-5 fle flex-row mb-10">
         <TouchableOpacity
           className="mr-5"
@@ -61,7 +74,6 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
           <AntDesign name="pluscircleo" size={24} color="black" />
         </TouchableOpacity>
       </View>
-
       <SelectDropdown
         rowStyle={{ backgroundColor: 'pink' }}
         buttonTextStyle={{ textTransform: 'capitalize' }}
@@ -73,7 +85,10 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
         rowTextStyle={{ textTransform: 'capitalize' }}
         data={DISCOUNT}
         onSelect={(selectedItem, index) => {
-          console.log(selectedItem, index);
+          setDeduction(() => ({
+            type: selectedItem.type,
+            value: selectedItem.value,
+          }));
         }}
         buttonTextAfterSelection={(selectedItem, index) => {
           // text represented after item is selected

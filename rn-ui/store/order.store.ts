@@ -33,7 +33,7 @@ export const useOrderStore = create<OrderStore>((set) => ({
       const groupedOrders: GroupedOrders = {};
 
       orders.forEach((order: Order) => {
-        const { item, price, quantity } = order;
+        const { item, price, quantity, total } = order;
 
         if (!groupedOrders[item]) {
           groupedOrders[item] = {
@@ -43,7 +43,7 @@ export const useOrderStore = create<OrderStore>((set) => ({
           };
         }
 
-        const total = price * quantity;
+        // const total = price * quantity;
         groupedOrders[item].totalPriceByItem += total;
         groupedOrders[item].totalItemsByItem += quantity;
         groupedOrders[item].orders.push({ ...order, total });

@@ -5,6 +5,7 @@ export interface ItemStore {
 }
 
 export interface Sales {
+  _id: any;
   customer: string;
   orders: any;
   status: string;
@@ -25,21 +26,13 @@ export interface SalesStore {
   discount: Discount | null;
   vat: Discount | null;
   isSaving: boolean;
+  parked: Sales[];
+  getSales: () => void;
+  getParked: () => void;
   saveSales: (sales: Sales) => void;
   setDiscount: (discount: Discount) => void;
+  updateSales: (sales: Sales) => void;
   setVat: (vat: Discount) => void;
-}
-
-export interface Order {
-  customer: any;
-  date: Date;
-  item: string;
-  option: string;
-  itemId: string;
-  price: number;
-  quantity: number;
-  status: any;
-  total: number;
 }
 
 export interface GroupedOrders {
@@ -88,7 +81,7 @@ export interface Order {
   option: string;
   quantity: number;
   price: number;
-  deduction: { name: string; value: number };
+  deduction: { type: string; value: number } | null;
   total: number;
   date: Date;
   customer: any;
