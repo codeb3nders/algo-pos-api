@@ -20,7 +20,7 @@ export default function SalesComponent({ navigation }: any) {
 
   useEffect(() => {
     getSales();
-  }, []);
+  }, [sales]);
 
   const updateSaleItem = (item: Sales) => {
     Alert.alert('Payment', 'Continue payment?', [
@@ -53,7 +53,7 @@ export default function SalesComponent({ navigation }: any) {
               <View
                 key={item._id}
                 className={`flex w-45 ${
-                  item.status === 'paid' ? 'bg-algo-green-1' : 'bg-orange-500'
+                  item.status === 'paid' ? 'bg-algo-green-1' : 'bg-blue-300'
                 }  border border-gray-300 p-2 m-2 rounded-md shadow-sl`}
               >
                 <Text className="text-white">
@@ -61,7 +61,10 @@ export default function SalesComponent({ navigation }: any) {
                 </Text>
                 {item.orders.map((i: any) => {
                   return (
-                    <Text className="text-white">{`${i.item} ${i.quantity} x ${i.price} = ${i.total}`}</Text>
+                    <Text
+                      key={`i-${i.item}`}
+                      className="text-white"
+                    >{`${i.item} ${i.quantity} x ${i.price} = ${i.total}`}</Text>
                   );
                 })}
                 <Text className="capitalize text-white">

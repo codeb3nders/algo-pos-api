@@ -26,9 +26,7 @@ export interface SalesStore {
   discount: Discount | null;
   vat: Discount | null;
   isSaving: boolean;
-  parked: Sales[];
   getSales: () => void;
-  getParked: () => void;
   saveSales: (sales: Sales) => void;
   setDiscount: (discount: Discount) => void;
   updateSales: (sales: Sales) => void;

@@ -8,7 +8,6 @@ export const useSalesStore = create<SalesStore>((set) => ({
   discount: null,
   vat: null,
   isSaving: false,
-  parked: [],
   getSales: async () => {
     const response = await getSales();
     set({ sales: response });
@@ -17,17 +16,13 @@ export const useSalesStore = create<SalesStore>((set) => ({
     try {
       set({ isSaving: true });
       await saveSales(sales);
-      // set(({ sales }) => ({ sales: [...sales, response] }));
     } catch {
       // Todo show error
     } finally {
       set({ isSaving: false });
     }
   },
-  getParked: async () =>
-    set((state) => ({
-      parked: state.sales.filter((i) => i.status !== 'paid'),
-    })),
+
   updateSales: async (sales: Sales) => {
     try {
       set({ isSaving: true });

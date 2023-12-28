@@ -29,12 +29,11 @@ const Cashier = () => {
   const salesStore = useSalesStore();
   const { items, loadingData, loadItems } = itemsStore;
   const { setQueueOrder } = orderStore;
-  const { sales, getParked } = salesStore;
+  const { sales, getSales } = salesStore;
 
   useEffect(() => {
     loadItems();
-    getParked();
-  }, [sales]);
+  }, []);
 
   useEffect(() => {
     groupedItem();
@@ -119,8 +118,6 @@ const Cashier = () => {
       </TouchableOpacity>
     );
   };
-
-  // 09178421364 kevin pillon
 
   return (
     <SafeAreaView

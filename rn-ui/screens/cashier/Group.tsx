@@ -19,12 +19,24 @@ const Group = ({ group, setCategory }: any) => {
             group.map((g: any) => {
               return (
                 <TouchableOpacity
+                  className="bg-algo-green-1 px-2 h-10 rounded-lg"
+                  style={{
+                    shadowColor: 'black',
+                    shadowOpacity: 0.26,
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowRadius: 10,
+                    elevation: 5,
+                  }}
                   key={`a-${g.category}`}
-                  style={styles.groupLayout}
                   onPress={() => setCategory(() => g.category)}
                 >
                   <View>
-                    <Text style={styles.group}>{g.category}</Text>
+                    <Text
+                      className="text-white capitalize"
+                      style={styles.group}
+                    >
+                      {g.category}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -41,11 +53,9 @@ const styles = StyleSheet.create({
   groupLayout: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#fff',
-    backgroundColor: 'green',
     height: 40,
     width: 100,
-    textAlignVertical: 'center',
+    // textAlignVertical: 'center',
   },
   group: {
     margin: 5,
