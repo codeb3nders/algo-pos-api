@@ -3,7 +3,7 @@ import { Button, Text, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/auth-context';
 import LoginScreen from './screens/login';
 import COLOR from './colors';
 import { HomeScreen } from './screens/home';

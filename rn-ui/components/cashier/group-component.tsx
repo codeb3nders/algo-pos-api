@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 
 import { StyleSheet } from 'react-native';
 
-const Group = ({ group, setCategory }: any) => {
+const GroupComponent = ({ group, setCategory }: any) => {
   return (
     <View
       style={{
@@ -47,7 +47,7 @@ const Group = ({ group, setCategory }: any) => {
   );
 };
 
-export default Group;
+export default GroupComponent;
 
 const styles = StyleSheet.create({
   groupLayout: {

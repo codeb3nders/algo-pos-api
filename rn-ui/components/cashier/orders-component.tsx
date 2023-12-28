@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { GroupedOrderItem, Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
-import CommonModalComponent from './CommonModal';
+import ModalComponent from '../common/modal-component';
 import { AntDesign } from '@expo/vector-icons';
 import { useSalesStore } from '../../store/sales.store';
 import { DISCOUNT } from '../../constant';
@@ -96,7 +96,7 @@ const Orders = () => {
           }`}
         </Text>
       </View>
-      <CommonModalComponent
+      <ModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       >
@@ -145,7 +145,7 @@ const Orders = () => {
             <Text style={styles.textStyle}>Update</Text>
           </TouchableOpacity>
         </View>
-      </CommonModalComponent>
+      </ModalComponent>
     </ScrollView>
   );
 };

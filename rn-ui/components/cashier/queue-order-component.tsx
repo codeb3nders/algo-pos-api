@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import SelectDropdown from 'react-native-select-dropdown';
 import { DISCOUNT } from '../../constant';
 
-const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
+const QueueOrderComponent = ({ modalVisible, setModalVisible }: any) => {
   const userOrder = useOrderStore();
   const { addOrder, queueOrder, setQueueOrder } = userOrder;
   const [quantity, setQuantity] = useState<number>(1);
@@ -120,7 +120,7 @@ const QueueOrder = ({ modalVisible, setModalVisible }: any) => {
   );
 };
 
-export default QueueOrder;
+export default QueueOrderComponent;
 
 const styles = StyleSheet.create({
   centeredView: {

@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
-import Orders from '../cashier/Orders';
+import { useAuth } from '../../context/auth-context';
+import Orders from '../../components/cashier/orders-component';
 import { useSalesStore } from '../../store/sales.store';
 import { Sales } from '../../interface';
 import { useEffect } from 'react';

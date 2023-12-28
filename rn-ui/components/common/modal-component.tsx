@@ -1,17 +1,7 @@
-import React, { useState } from 'react';
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Order } from '../../interface';
-import { useOrderStore } from '../../store/order.store';
-import Orders from './Orders';
+import React from 'react';
+import { Alert, Modal, StyleSheet, View } from 'react-native';
 
-const CommonModalComponent = ({
+const ModalComponent = ({
   modalVisible,
   setModalVisible,
   children,
@@ -45,7 +35,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    // marginTop: 22,
   },
   modalView: {
     margin: 5,
@@ -84,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CommonModalComponent;
+export default ModalComponent;

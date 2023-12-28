@@ -1,5 +1,5 @@
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/auth-context';
 import { useState } from 'react';
 import COLOR from '../../colors';
 import { useLoaderStore } from '../../store/loader.state';

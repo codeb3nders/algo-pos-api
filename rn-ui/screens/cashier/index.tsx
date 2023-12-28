@@ -1,22 +1,14 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useItemStore } from '../../store/item.store';
 import { Item } from '../../interface';
-import Group from './Group';
-import { useOrderStore } from '../../store/order.store';
-import CommonModalComponent from './CommonModal';
-import QueueOrder from './QueueOrder';
-import Basket from './Basket';
+import GroupComponent from '../../components/cashier/group-component';
+import ModalComponent from '../../components/common/modal-component';
+import QueueOrderComponent from '../../components/cashier/queue-order-component';
+import BasketComponent from '../../components/cashier/basket-component';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AlertComponent from '../../components/AlertComponent';
-import { useSalesStore } from '../../store/sales.store';
+import ParkedAlertComponent from '../../components/cashier/parked-alert-component';
+import ItemComponent from '../../components/cashier/item-component';
 
 const Cashier = () => {
   const [category, setCategory] = useState('');
@@ -25,11 +17,7 @@ const Cashier = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const itemsStore = useItemStore();
-  const orderStore = useOrderStore();
-  const salesStore = useSalesStore();
   const { items, loadingData, loadItems } = itemsStore;
-  const { setQueueOrder } = orderStore;
-  const { sales, getSales } = salesStore;
 
   useEffect(() => {
     loadItems();
@@ -78,55 +66,22 @@ const Cashier = () => {
     setGroup(() => groupedItems);
   };
 
-  const handleOnPress = (item: Item) => {
-    setQueueOrder(item);
-    setModalVisible(() => true);
-  };
-
-  const Item = ({ item }: { item: Item }) => {
-    const imagelink = item.image;
-
-    return (
-      <TouchableOpacity
-        className="w-24 h-30 rounded-md bg-red-100 m-1 p-1"
-        style={{
-          shadowColor: 'black',
-          shadowOpacity: 0.26,
-          shadowOffset: { width: 0, height: 2 },
-          shadowRadius: 10,
-          elevation: 5,
-          backgroundColor: 'white',
-        }}
-        onPress={() => handleOnPress(item)}
-      >
-        {!imagelink ? (
-          <Image
-            className="rounded-xl"
-            style={{ alignSelf: 'center', width: 90, height: 70 }}
-            source={require(`../../assets/icon.png`)}
-          />
-        ) : (
-          <Image
-            className="rounded-xl"
-            style={{ alignSelf: 'center', width: 90, height: 70 }}
-            source={{ uri: `${imagelink}` }}
-          />
-        )}
-        <Text style={styles.item} key={item._id}>
-          {item.item} {item.option}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
   return (
-    <SafeAreaView
+    <View
       style={{
+        paddingTop: 10,
+        top: 0,
         flex: 1,
       }}
     >
-      <AlertComponent />
-      <Group group={group} category={category} setCategory={setCategory} />
+      <ParkedAlertComponent />
+
+      <GroupComponent
+        group={group}
+        category={category}
+        setCategory={setCategory}
+      />
+
       <View
         className=" flex align-item-center shadow-md m-2"
         style={{ height: '80%' }}
@@ -135,7 +90,13 @@ const Cashier = () => {
           <View className="flex justify-center align-top flex-row flex-wrap">
             {selectedCategory.length ? (
               selectedCategory.map((item: Item, id: number) => {
-                return <Item key={`b-${id}`} item={item} />;
+                return (
+                  <ItemComponent
+                    key={`b-${id}`}
+                    item={item}
+                    setModalVisible={setModalVisible}
+                  />
+                );
               })
             ) : (
               <View className="h-96 w-full justify-center items-center">
@@ -143,20 +104,19 @@ const Cashier = () => {
               </View>
             )}
           </View>
-          <CommonModalComponent
+          <ModalComponent
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
           >
-            <QueueOrder
+            <QueueOrderComponent
               modalVisible={modalVisible}
               setModalVisible={setModalVisible}
             />
-          </CommonModalComponent>
+          </ModalComponent>
         </ScrollView>
-
-        <Basket />
       </View>
-    </SafeAreaView>
+      <BasketComponent />
+    </View>
   );
 };
 

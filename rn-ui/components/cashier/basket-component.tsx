@@ -1,15 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import CommonModalComponent from './CommonModal';
-import Orders from './Orders';
+import ModalComponent from '../common/modal-component';
+import Orders from './orders-component';
 import { useOrderStore } from '../../store/order.store';
-import { Order, Sales } from '../../interface';
-import { saveSales } from '../../api/sales';
+import { Sales } from '../../interface';
 import { useSalesStore } from '../../store/sales.store';
 import SelectDropdown from 'react-native-select-dropdown';
+import { AntDesign } from '@expo/vector-icons';
 import { DISCOUNT } from '../../constant';
 
-const Basket = () => {
+const BasketComponent = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
   const { saveSales, discount, setDiscount, vat } = useSalesStore();
@@ -46,10 +46,13 @@ const Basket = () => {
         style={[styles.button, styles.buttonCtr]}
         onPress={() => setModalVisible(!modalVisible)}
       >
-        <Text style={styles.textStyle}>{voucher.totalQuantity}</Text>
+        <Text style={styles.textStyle}>
+          <AntDesign name="shoppingcart" size={18} color="white" />{' '}
+          {voucher.totalQuantity}
+        </Text>
       </TouchableOpacity>
 
-      <CommonModalComponent
+      <ModalComponent
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       >
@@ -99,12 +102,12 @@ const Basket = () => {
             <Text style={styles.textStyle}>Park</Text>
           </TouchableOpacity>
         </View>
-      </CommonModalComponent>
+      </ModalComponent>
     </View>
   );
 };
 
-export default Basket;
+export default BasketComponent;
 
 const styles = StyleSheet.create({
   itemLayout: {
@@ -142,8 +145,9 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textAlign: 'center',
+    fontSize: 18,
   },
   modalText: {
     marginBottom: 15,
