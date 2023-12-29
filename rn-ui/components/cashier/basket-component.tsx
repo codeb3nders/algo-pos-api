@@ -8,11 +8,15 @@ import { useSalesStore } from '../../store/sales.store';
 import SelectDropdown from 'react-native-select-dropdown';
 import { AntDesign } from '@expo/vector-icons';
 import { DISCOUNT } from '../../constant';
+import PayMentMethodComponent from './payment-method-component';
 
 const BasketComponent = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
   const { saveSales, discount, setDiscount, vat } = useSalesStore();
+  const [paymentModalVisible, setPaymentModalVisible] =
+    useState<boolean>(false);
+  const [paymentDetails, setPaymentDetails] = useState<any>();
 
   useEffect(() => {
     createVoucher(orders);
@@ -33,11 +37,14 @@ const BasketComponent = () => {
       Vat: 10,
     };
 
-    saveSales(orderData);
-
-    updateOrder([]);
-
-    setModalVisible(!modalVisible);
+    if (status === 'park') {
+      saveSales(orderData);
+      updateOrder([]);
+      setModalVisible(!modalVisible);
+    } else {
+      setPaymentDetails(() => orderData);
+      setPaymentModalVisible(!paymentModalVisible);
+    }
   };
 
   return (
@@ -102,6 +109,19 @@ const BasketComponent = () => {
             <Text style={styles.textStyle}>Park</Text>
           </TouchableOpacity>
         </View>
+      </ModalComponent>
+
+      {/* // ModalComponent for Payment */}
+
+      <ModalComponent
+        modalVisible={paymentModalVisible}
+        setModalVisible={setPaymentModalVisible}
+      >
+        <PayMentMethodComponent
+          data={paymentDetails}
+          modalVisible={paymentModalVisible}
+          setModalVisible={setPaymentModalVisible}
+        />
       </ModalComponent>
     </View>
   );

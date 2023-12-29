@@ -14,11 +14,17 @@ export interface Sales {
   amount: number;
   discount: number;
   Vat: number;
+  referenceNumber?: string;
+  details?: string;
 }
 
 export interface Discount {
   type: string;
   value: number;
+}
+
+export interface IPaymentMethod {
+  type: string;
 }
 
 export interface SalesStore {
