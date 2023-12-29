@@ -10,7 +10,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import { PAYMENT_METHOD } from '../../constant';
 import { IPaymentMethod, Sales } from '../../interface';
-import { text } from 'express';
 import { useSalesStore } from '../../store/sales.store';
 import { useOrderStore } from '../../store/order.store';
 
@@ -18,48 +17,45 @@ const PayMentMethodComponent = ({
   data,
   modalVisible,
   setModalVisible,
+  isParked = false,
 }: {
   data: Sales;
   modalVisible: boolean;
   setModalVisible: Function;
+  isParked?: boolean;
 }) => {
   const [paymentMethod, setPaymentMethod] = useState<string>('');
-  const { saveSales, discount, setDiscount, vat } = useSalesStore();
-  const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
+  const { saveSales, updateSales } = useSalesStore();
+  const { updateOrder } = useOrderStore();
 
   // props.childRef.current = {
   //   processPayment,
   //   paymentMethod,
   // };
 
-  const processPayment = ({
-    referenceNumber,
-    details,
-  }: {
-    referenceNumber: string;
-    details: string;
-  }) => {
-    const dataTosave = Object.assign({}, data);
+  const processPayment = (referenceNumber?: string, details?: string) => {
+    console.log({ paymentMethod, referenceNumber, details });
 
-    if (paymentMethod === 'cash') {
-      dataTosave.status = 'paid';
+    const dataToSave = Object.assign({}, data);
+
+    dataToSave.referenceNumber = referenceNumber && referenceNumber;
+    dataToSave.details = details && details;
+
+    dataToSave.paymentMethod = paymentMethod;
+
+    if (isParked) {
+      dataToSave.status = 'paid';
+      updateSales(dataToSave);
     } else {
-      dataTosave.referenceNumber = referenceNumber;
-      dataTosave.details = details;
+      saveSales(dataToSave);
+      updateOrder([]);
     }
-
-    dataTosave.paymentMethod = paymentMethod;
-
-    console.log({ dataTosave });
-    saveSales(dataTosave);
-    updateOrder([]);
-
     setModalVisible(!modalVisible);
   };
 
   const CashPayment = () => {
-    const [cashReceived, onChangeNumber] = useState<any>(0);
-    const [change, setChange] = useState<number>(0);
+    const [cashReceived, onChangeNumber] = useState<any>();
+    const [change, setChange] = useState<any>();
 
     const toPay = data.amount;
 
@@ -69,7 +65,7 @@ const PayMentMethodComponent = ({
 
     return (
       <SafeAreaView>
-        <Text>Amount to pay: {toPay}</Text>
+        <Text className="mb-5">Amount to pay: {toPay}</Text>
         <Text>Cash Received {cashReceived}</Text>
         <TextInput
           style={styles.input}
@@ -79,21 +75,42 @@ const PayMentMethodComponent = ({
           keyboardType="numeric"
         />
         <Text>Change {cashReceived && change}</Text>
+        <View className="flex flex-row justify-between my-10">
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text style={styles.textStyle}>Close</Text>
+          </TouchableOpacity>
+          {paymentMethod && (
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() =>
+                processPayment(
+                  '',
+                  `Cash Received: ${cashReceived} Change: ${change}`,
+                )
+              }
+            >
+              <Text style={styles.textStyle}>Pay</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </SafeAreaView>
     );
   };
 
-  const 9Ewallet = () => {
+  const EWallet = () => {
     const [referenceNumber, onChangeReferenceNumber] = useState<any>('');
     const [details, onChangeDetails] = useState<any>('');
-
     const toPay = data.amount;
 
     return (
       <SafeAreaView>
-        <Text>Amount to pay: {toPay}</Text>
+        <Text className="mb-5">Amount to pay: {toPay}</Text>
         <Text>Rerence Number:</Text>
         <TextInput
+          key={'refn'}
           style={styles.input}
           onChangeText={onChangeReferenceNumber}
           value={referenceNumber}
@@ -102,12 +119,29 @@ const PayMentMethodComponent = ({
         />
         <Text>Details:</Text>
         <TextInput
+          key={'dt'}
           style={styles.input}
           onChangeText={onChangeDetails}
           value={details}
           placeholder="Payment details here"
           keyboardType="numeric"
         />
+        <View className="flex flex-row justify-between my-10">
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => setModalVisible(!modalVisible)}
+          >
+            <Text style={styles.textStyle}>Close</Text>
+          </TouchableOpacity>
+          {paymentMethod && (
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => processPayment(referenceNumber, details)}
+            >
+              <Text style={styles.textStyle}>Pay</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </SafeAreaView>
     );
   };
@@ -115,19 +149,17 @@ const PayMentMethodComponent = ({
   const PaymentComponent = ({ item }: any) => {
     return (
       <TouchableOpacity
-        key={item.type}
-        className="w-24 h-30 rounded-md bg-red-100 m-1 p-1"
+        className="w-24 h-12 rounded-md bg-blue-300 m-2 p-1 items-center"
         style={{
           shadowColor: 'black',
           shadowOpacity: 0.26,
           shadowOffset: { width: 0, height: 2 },
           shadowRadius: 10,
           elevation: 5,
-          backgroundColor: 'white',
         }}
         onPress={() => setPaymentMethod(() => item.type)}
       >
-        <Text style={styles.item} key={item.type}>
+        <Text className="capitalize" style={styles.item} key={`t-${item.type}`}>
           {item.type}
         </Text>
       </TouchableOpacity>
@@ -142,32 +174,36 @@ const PayMentMethodComponent = ({
           flex: 1,
           flexDirection: 'row',
           justifyContent: 'center',
-          maxHeight: 70,
+          maxHeight: 100,
           padding: 5,
         }}
       >
         <ScrollView horizontal={true}>
-          {PAYMENT_METHOD.map((item: IPaymentMethod) => {
-            return <PaymentComponent item={item} />;
+          {PAYMENT_METHOD.map((item: IPaymentMethod, i: number) => {
+            return <PaymentComponent key={`p${item}-${i}`} item={item} />;
           })}
         </ScrollView>
       </View>
 
-      <View>{paymentMethod === 'cash' ? <CashPayment /> : <Ewallet />}</View>
-      <TouchableOpacity
-        style={[styles.button, styles.buttonClose]}
-        onPress={() => setModalVisible(!modalVisible)}
-      >
-        <Text style={styles.textStyle}>Close</Text>
-      </TouchableOpacity>
-      {paymentMethod && (
-        <TouchableOpacity
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => processPayment()}
-        >
-          <Text style={styles.textStyle}>Pay</Text>
-        </TouchableOpacity>
-      )}
+      <View>
+        {!paymentMethod ? (
+          <View>
+            <Text className="flex flex-row text-center p-5 font-bold text-lg">
+              Select Payment Method
+            </Text>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        ) : paymentMethod === 'cash' ? (
+          <CashPayment />
+        ) : (
+          <EWallet />
+        )}
+      </View>
     </View>
   );
 };

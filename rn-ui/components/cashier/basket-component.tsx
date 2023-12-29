@@ -25,6 +25,7 @@ const BasketComponent = () => {
   if (!voucher || !voucher.totalQuantity) return;
 
   const paymentProcess = (status: string) => {
+    setModalVisible(!modalVisible);
     const orderData: Sales = {
       _id: new Date().valueOf(),
       customer: 'JM Copino',
@@ -37,10 +38,10 @@ const BasketComponent = () => {
       Vat: 10,
     };
 
-    if (status === 'park') {
+    if (status === 'parked') {
+      orderData.paymentMethod = '';
       saveSales(orderData);
       updateOrder([]);
-      setModalVisible(!modalVisible);
     } else {
       setPaymentDetails(() => orderData);
       setPaymentModalVisible(!paymentModalVisible);
@@ -104,14 +105,12 @@ const BasketComponent = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
-            onPress={() => paymentProcess('park')}
+            onPress={() => paymentProcess('parked')}
           >
             <Text style={styles.textStyle}>Park</Text>
           </TouchableOpacity>
         </View>
       </ModalComponent>
-
-      {/* // ModalComponent for Payment */}
 
       <ModalComponent
         modalVisible={paymentModalVisible}

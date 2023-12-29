@@ -26,6 +26,7 @@ export const useSalesStore = create<SalesStore>((set) => ({
   updateSales: async (sales: Sales) => {
     try {
       set({ isSaving: true });
+
       const response = await updateSales(sales);
       set({ sales: response });
     } catch {
