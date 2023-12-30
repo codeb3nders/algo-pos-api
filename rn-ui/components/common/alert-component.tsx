@@ -10,9 +10,12 @@ const AlertComponent = ({
 }) => {
   return (
     <View
-      className="absolute bg-orange-500 rounded-md m-2 p-2"
+      className="items-center rounded-full bg-orange-500  m-2 p-2"
       style={{
         ...position,
+        // position: 'relative',
+        // minWidth: 50,
+        width: 90,
         shadowColor: 'black',
         shadowOpacity: 0.26,
         shadowOffset: { width: 0, height: 2 },

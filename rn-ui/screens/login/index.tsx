@@ -1,8 +1,10 @@
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { useAuth } from '../../context/auth-context';
 import { useState } from 'react';
 import COLOR from '../../colors';
 import { useLoaderStore } from '../../store/loader.state';
+import ButtonComponent from '../../components/common/button-component';
+import WhiteText from '../../components/common/white-text-component';
 
 export default function LoginScreen({ navigation }: any) {
   const [name, setName] = useState('');
@@ -83,7 +85,9 @@ export default function LoginScreen({ navigation }: any) {
         <Text className="my-5 text-xl text-red-500">{errorMessage}</Text>
       )}
 
-      <Button title="Submit" onPress={() => login()} />
+      <ButtonComponent callback={() => login()}>
+        <WhiteText text="Login" />
+      </ButtonComponent>
     </View>
   );
 }

@@ -6,6 +6,8 @@ import {
   ScrollView,
   SafeAreaView,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { PAYMENT_METHOD } from '../../constant';
@@ -34,8 +36,6 @@ const PayMentMethodComponent = ({
   // };
 
   const processPayment = (referenceNumber?: string, details?: string) => {
-    console.log({ paymentMethod, referenceNumber, details });
-
     const dataToSave = Object.assign({}, data);
 
     dataToSave.referenceNumber = referenceNumber && referenceNumber;
@@ -63,6 +63,8 @@ const PayMentMethodComponent = ({
       setChange(() => cashReceived - toPay);
     }, [cashReceived]);
 
+    const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
+
     return (
       <SafeAreaView>
         <Text className="mb-5">Amount to pay: {toPay}</Text>
@@ -72,7 +74,7 @@ const PayMentMethodComponent = ({
           onChangeText={onChangeNumber}
           value={cashReceived}
           placeholder="useless placeholder"
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
         />
         <Text>Change {cashReceived && change}</Text>
         <View className="flex flex-row justify-between my-10">
@@ -115,7 +117,6 @@ const PayMentMethodComponent = ({
           onChangeText={onChangeReferenceNumber}
           value={referenceNumber}
           placeholder="Ex: 1234141324"
-          keyboardType="numeric"
         />
         <Text>Details:</Text>
         <TextInput
@@ -124,7 +125,6 @@ const PayMentMethodComponent = ({
           onChangeText={onChangeDetails}
           value={details}
           placeholder="Payment details here"
-          keyboardType="numeric"
         />
         <View className="flex flex-row justify-between my-10">
           <TouchableOpacity

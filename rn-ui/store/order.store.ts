@@ -16,10 +16,26 @@ export const useOrderStore = create<OrderStore>((set) => ({
     set({ queueOrder: order ? order : null }),
   addOrder: async (order: Order) => {
     try {
-      set({ loadingData: true });
-      set(({ orders }) => ({ orders: [...orders, order] }));
-    } catch {
-      // Todo show error
+      set(() => {
+        return { loadingData: true };
+      });
+      set(({ orders }) => {
+        const existingOrderIndex = orders.findIndex(
+          (existingOrder) => existingOrder.itemId === order.itemId,
+        );
+
+        if (existingOrderIndex !== -1) {
+          // Item already exists, update quantity
+          const updatedOrders = [...orders];
+          updatedOrders[existingOrderIndex].quantity += order.quantity;
+          return { orders: updatedOrders };
+        } else {
+          // Item doesn't exist, add new order
+          return { orders: [...orders, order] };
+        }
+      });
+    } catch (error) {
+      console.error('Error adding order:', error);
     } finally {
       set({ loadingData: false });
     }
@@ -43,25 +59,20 @@ export const useOrderStore = create<OrderStore>((set) => ({
           };
         }
 
-        // const total = price * quantity;
         groupedOrders[item].totalPriceByItem += total;
         groupedOrders[item].totalItemsByItem += quantity;
         groupedOrders[item].orders.push({ ...order, total });
       });
 
-      // Calculate grand total price
       const grandTotalPrice: number = Object.values(groupedOrders).reduce(
         (sum, itemGroup) => sum + itemGroup.totalPriceByItem,
         0,
       );
 
-      // Calculate total items
       const totalItems: number = Object.values(groupedOrders).reduce(
         (sum, itemGroup) => sum + itemGroup.totalItemsByItem,
         0,
       );
-
-      // Log the results
 
       const all = {
         totalQuantity: totalItems,
@@ -72,29 +83,4 @@ export const useOrderStore = create<OrderStore>((set) => ({
       set({ voucher: all });
     }
   },
-
-  // createVoucher: (orders: Order[]) => {
-  //   const groupedOrderItems: GroupedOrderItem[] = [];
-
-  //   orders.forEach((order: Order) => {
-  //     const existingGroup = groupedOrderItems.find(
-  //       (group) => group.itemId === order.itemId,
-  //     );
-
-  //     if (existingGroup) {
-  //       existingGroup.totalQuantity += order.quantity;
-  //       existingGroup.totalPrice += order.total;
-  //       existingGroup.orders.push(order);
-  //     } else {
-  //       groupedOrderItems.push({
-  //         itemId: order.itemId,
-  //         totalQuantity: order.quantity,
-  //         totalPrice: order.total,
-  //         orders: [order],
-  //       });
-  //     }
-  //   });
-
-  //   set({ voucher: groupedOrderItems ? groupedOrderItems : null });
-  // },
 }));

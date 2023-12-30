@@ -10,8 +10,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ParkedAlertComponent from '../../components/cashier/parked-alert-component';
 import ItemComponent from '../../components/cashier/item-component';
 
-const Cashier = () => {
-  const [category, setCategory] = useState('');
+const Cashier = ({ navigation }: any) => {
+  const [category, setCategory] = useState('frappe');
   const [selectedCategory, setSelectedCategory] = useState<any>([]);
   const [group, setGroup] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
@@ -74,8 +74,6 @@ const Cashier = () => {
         flex: 1,
       }}
     >
-      <ParkedAlertComponent />
-
       <GroupComponent
         group={group}
         category={category}
@@ -83,11 +81,11 @@ const Cashier = () => {
       />
 
       <View
-        className=" flex align-item-center shadow-md m-2"
-        style={{ height: '80%' }}
+        className=" flex align-item-center shadow-md -m-2 p-1  py-2 bg-green-100 "
+        style={{ height: '90%' }}
       >
         <ScrollView>
-          <View className="flex justify-center align-top flex-row flex-wrap">
+          <View className="flex justify-center align-top flex-row flex-wrap ">
             {selectedCategory.length ? (
               selectedCategory.map((item: Item, id: number) => {
                 return (
@@ -104,17 +102,9 @@ const Cashier = () => {
               </View>
             )}
           </View>
-          <ModalComponent
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-          >
-            <QueueOrderComponent
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-            />
-          </ModalComponent>
         </ScrollView>
       </View>
+      <ParkedAlertComponent />
       <BasketComponent />
     </View>
   );

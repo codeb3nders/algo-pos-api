@@ -1,48 +1,37 @@
 import * as React from 'react';
-import {
-  Alert,
-  Button,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../../context/auth-context';
-import Orders from '../../components/cashier/orders-component';
 import { useSalesStore } from '../../store/sales.store';
 import { Sales } from '../../interface';
 import { useEffect, useState } from 'react';
 import ModalComponent from '../../components/common/modal-component';
 import PayMentMethodComponent from '../../components/cashier/payment-method-component';
+import ButtonComponent from '../../components/common/button-component';
+import WhiteText from '../../components/common/white-text-component';
 
-export default function SalesComponent({ navigation }: any) {
+export default function SalesComponent({ filter }: any) {
   const saleStore = useSalesStore();
   const { sales, getSales, updateSales } = saleStore;
+  const [filteredSales, setFilteredSales] = useState<Sales[]>();
   const auth: any = useAuth();
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<any>();
 
   useEffect(() => {
     getSales();
+    getFilteredSales();
   }, [sales]);
+
+  const getFilteredSales = () => {
+    if (!filter) return sales;
+    return sales.filter((sales) => {
+      return sales.status === 'parked';
+    });
+  };
 
   const updateSaleItem = (item: Sales) => {
     setPaymentDetails(() => item);
     setPaymentModalVisible(!paymentModalVisible);
-    // Alert.alert('Payment', 'Continue payment?', [
-    //   {
-    //     text: 'Cancel',
-    //     onPress: () => console.log('Cancel Pressed'),
-    //     style: 'cancel',
-    //   },
-    //   {
-    //     text: 'Pay',
-    //     onPress: () => {
-    //       item.status = 'paid';
-    //       updateSales(item);
-    //     },
-    //   },
-    // ]);
   };
 
   return (
@@ -54,7 +43,7 @@ export default function SalesComponent({ navigation }: any) {
         }}
       >
         {sales &&
-          sales.map((item) => {
+          getFilteredSales().map((item) => {
             return (
               <View
                 key={`s-${item._id}`}
@@ -66,11 +55,18 @@ export default function SalesComponent({ navigation }: any) {
                   {new Date(item.date).toDateString()}
                 </Text>
                 {item.orders.map((i: any) => {
+                  const item = i ? i.item : '';
+                  const price = i ? i.price : 0;
+                  const deduct = i && i.deduction ? i.deduction.value : 0;
+                  const opt = i ? i.option : 0;
+                  const quantity = i ? i.quantity : 0;
                   return (
-                    <Text
-                      key={`i-${i.item}`}
-                      className="text-white"
-                    >{`${i.item} ${i.quantity} x ${i.price} = ${i.total}`}</Text>
+                    <Text key={`i-${i.item}`} className="text-white">
+                      {/* {`${i.item} ${i.quantity} x ${i.price} = ${i.total}`} */}
+                      {item} {opt}: {price} x {quantity}
+                      {deduct > 0 && ' - '}
+                      {deduct > 0 && deduct} = {price * quantity - deduct}
+                    </Text>
                   );
                 })}
                 <Text className="capitalize text-white">
@@ -103,8 +99,11 @@ export default function SalesComponent({ navigation }: any) {
             );
           })}
       </ScrollView>
-
-      <Button title="Logout" onPress={() => auth.onLogout()} />
+      <View className="flex self-center mb-5">
+        <ButtonComponent callback={() => auth.onLogout()}>
+          <WhiteText text="Logout" />
+        </ButtonComponent>
+      </View>
 
       {paymentModalVisible && (
         <ModalComponent

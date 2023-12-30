@@ -1,5 +1,5 @@
 import { TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
-import { Item } from '../../interface';
+import { Item, Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 
 const ItemComponent = ({
@@ -10,12 +10,27 @@ const ItemComponent = ({
   setModalVisible: Function;
 }) => {
   const orderStore = useOrderStore();
-  const { setQueueOrder } = orderStore;
+  const { addOrder, setQueueOrder } = orderStore;
   const imagelink = item.image;
 
   const handleOnPress = (item: Item) => {
-    setQueueOrder(item);
-    setModalVisible(() => true);
+    const order: Order = {
+      itemId: item?._id,
+      item: item.item,
+      option: item.option,
+      quantity: 1,
+      price: item.price,
+      total: item.price * 1,
+      deduction: null,
+      date: new Date(),
+      customer: item.customer,
+      status: null,
+    };
+
+    addOrder(order);
+
+    // setQueueOrder(item);
+    // setModalVisible(() => true);
   };
 
   return (

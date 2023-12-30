@@ -13,6 +13,8 @@ import ModalComponent from '../common/modal-component';
 import { AntDesign } from '@expo/vector-icons';
 import { useSalesStore } from '../../store/sales.store';
 import { DISCOUNT } from '../../constant';
+import SelectDropdown from 'react-native-select-dropdown';
+import QueueOrderComponent from './queue-order-component';
 
 const Orders = () => {
   const orderStore = useOrderStore();
@@ -22,6 +24,11 @@ const Orders = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedId, setSelectedId] = useState<string>('');
   const { sales, discount, setDiscount, vat } = useSalesStore();
+
+  const [deduction, setDeduction] = useState<{
+    type: string;
+    value: number;
+  } | null>(null);
 
   useEffect(() => {
     createVoucher(orders);
@@ -33,16 +40,18 @@ const Orders = () => {
     setModalVisible(!modalVisible);
   };
 
-  const updateOrderQuantity = (itemId: string | null) => {
-    const newQuantity = quantity; // Specify the new quantity
-
+  const updateOrderDetails = (itemId: string | null) => {
     const updatedOrders = orderStore.orders.map((order) => {
       if (order.itemId === itemId) {
-        // If the itemId matches, update the quantity
+        const amount = order.price * quantity;
+        const deduct = deduction ? deduction?.value : 0;
+        const totalAmount = amount - amount * deduct;
+
         return {
           ...order,
-          quantity: newQuantity,
-          total: order.price * newQuantity,
+          quantity: quantity,
+          total: totalAmount,
+          deduction: deduction,
         };
       }
       // If the itemId doesn't match, keep the order unchanged
@@ -131,6 +140,35 @@ const Orders = () => {
             </View>
           </View>
         </View>
+        <View>
+          <SelectDropdown
+            rowStyle={{ backgroundColor: 'pink' }}
+            buttonTextStyle={{ textTransform: 'capitalize' }}
+            defaultButtonText="Apply discount"
+            selectedRowTextStyle={{
+              textTransform: 'capitalize',
+              fontWeight: 'bold',
+            }}
+            rowTextStyle={{ textTransform: 'capitalize' }}
+            data={DISCOUNT}
+            onSelect={(selectedItem, index) => {
+              setDeduction(() => ({
+                type: selectedItem.type,
+                value: selectedItem.value,
+              }));
+            }}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              // text represented after item is selected
+              // if data array is an array of objects then return selectedItem.property to render after item is selected
+              return `Discount: ${selectedItem.value * 100}%`;
+            }}
+            rowTextForSelection={(item, index) => {
+              // text represented for each item in dropdown
+              // if data array is an array of objects then return item.property to represent item in dropdown
+              return item.type;
+            }}
+          />
+        </View>
         <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
@@ -140,11 +178,17 @@ const Orders = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
-            onPress={() => updateOrderQuantity(selectedId)}
+            onPress={() => updateOrderDetails(selectedId)}
           >
             <Text style={styles.textStyle}>Update</Text>
           </TouchableOpacity>
         </View>
+
+        {/* <QueueOrderComponent
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          orderItem={updatedOrder}
+        /> */}
       </ModalComponent>
     </ScrollView>
   );
@@ -186,6 +230,10 @@ const Product = ({
   const opt = item ? item.option : 0;
   const quantity = item ? item.quantity : 0;
 
+  const totalAmount = price * quantity;
+
+  const discountedAmount = totalAmount - totalAmount * deduct;
+
   return (
     <View
       className="flex"
@@ -204,7 +252,7 @@ const Product = ({
         >
           {itm} {opt}: {price} x {quantity}
           {deduct > 0 && ' - '}
-          {deduct > 0 && deduct} = {price * quantity - deduct}
+          {deduct > 0 && deduct} = {discountedAmount}
         </Text>
       </TouchableOpacity>
     </View>

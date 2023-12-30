@@ -1,8 +1,10 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 
 import { StyleSheet } from 'react-native';
+import WhiteText from '../common/white-text-component';
+import BlackText from '../common/black-text-component';
 
-const GroupComponent = ({ group, setCategory }: any) => {
+const GroupComponent = ({ group, category, setCategory }: any) => {
   return (
     <View
       style={{
@@ -19,7 +21,11 @@ const GroupComponent = ({ group, setCategory }: any) => {
             group.map((g: any) => {
               return (
                 <TouchableOpacity
-                  className="bg-algo-green-1 px-2 h-10 rounded-lg mx-1"
+                  className={`px-2 h-10 rounded-lg mx-1 ${
+                    g.category.toLowerCase() === category.toLowerCase()
+                      ? ' h-80 border border-green-300 bg-green-100'
+                      : 'bg-algo-green-1'
+                  }  `}
                   style={{
                     shadowColor: 'black',
                     shadowOpacity: 0.26,
@@ -31,12 +37,13 @@ const GroupComponent = ({ group, setCategory }: any) => {
                   onPress={() => setCategory(() => g.category)}
                 >
                   <View>
-                    <Text
-                      className="text-white capitalize"
-                      style={styles.group}
-                    >
-                      {g.category}
-                    </Text>
+                    <View style={styles.group}>
+                      {g.category.toLowerCase() !== category.toLowerCase() ? (
+                        <WhiteText text={g.category} />
+                      ) : (
+                        <BlackText text={g.category} />
+                      )}
+                    </View>
                   </View>
                 </TouchableOpacity>
               );
