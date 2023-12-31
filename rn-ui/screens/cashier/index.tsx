@@ -22,6 +22,8 @@ const Cashier = ({ navigation }: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const orientation = useOrientation();
 
+  console.log('-- -- -- ', orientation, ORIENTATION.PORTRAIT);
+
   const itemsStore = useItemStore();
   const { items, loadingData, loadItems } = itemsStore;
 

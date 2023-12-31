@@ -22,10 +22,10 @@ const ParkedAlertComponent = () => {
   if (!filterParked()) return;
 
   return (
-    <>
+    <View className="absolute left-0 bottom-0">
       <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
         <AlertComponent position={{ left: 1, bottom: 1 }}>
-          <Text>{filterParked()} Parked</Text>
+          <Text>{filterParked()} Parked--</Text>
         </AlertComponent>
       </TouchableOpacity>
       {modalVisible && (
@@ -44,7 +44,7 @@ const ParkedAlertComponent = () => {
           </TouchableOpacity>
         </ModalComponent>
       )}
-    </>
+    </View>
   );
 };
 

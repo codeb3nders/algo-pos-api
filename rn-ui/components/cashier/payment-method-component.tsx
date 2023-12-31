@@ -35,7 +35,6 @@ const PayMentMethodComponent = ({
   // };
 
   const processPayment = (referenceNumber?: string, details?: string) => {
-    alert('here');
     const dataToSave = Object.assign({}, data);
 
     dataToSave.referenceNumber = referenceNumber && referenceNumber;
@@ -51,7 +50,7 @@ const PayMentMethodComponent = ({
       updateOrder([]);
     }
 
-    setModalVisible(!modalVisible);
+    setModalVisible && setModalVisible(!modalVisible);
   };
 
   const CashPayment = () => {

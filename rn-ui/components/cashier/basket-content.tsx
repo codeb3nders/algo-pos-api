@@ -7,15 +7,17 @@ import {
 } from 'react-native';
 import React, { useState } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
-import { DISCOUNT } from '../../constant';
+import { DISCOUNT, ORIENTATION } from '../../constant';
 import Orders from './orders-component';
 import { useSalesStore } from '../../store/sales.store';
 import { Sales } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 import ModalComponent from '../common/modal-component';
 import PayMentMethodComponent from './payment-method-component';
+import useOrientation from '../../hooks/useOrientation';
 
 const BasketContent = ({ modalVisible, setModalVisible }: any) => {
+  const orientation = useOrientation();
   const { saveSales, discount, setDiscount, vat } = useSalesStore();
   const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
 
@@ -25,7 +27,11 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
 
   const paymentProcess = (status: string) => {
     if (!voucher || !voucher.totalQuantity) return;
-    setPaymentModalVisible(!paymentModalVisible);
+
+    // TODO: orientation condition
+    orientation === ORIENTATION.PORTRAIT &&
+      setPaymentModalVisible(!paymentModalVisible);
+
     const orderData: Sales = {
       _id: new Date().valueOf(),
       customer: 'JM Copino',
@@ -42,7 +48,7 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
       orderData.paymentMethod = '';
       saveSales(orderData);
       updateOrder([]);
-      setModalVisible(!modalVisible);
+      // setModalVisible && setModalVisible(!modalVisible);
     } else {
       setPaymentModalVisible(!paymentModalVisible);
       setPaymentDetails(() => orderData);
@@ -80,23 +86,27 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
           />
         </View>
         <View className="flex items-center">
-          <View
-            className="space-x-10"
-            style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}
-          >
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => paymentProcess('paid')}
+          {orders.length ? (
+            <View
+              className="space-x-10"
+              style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}
             >
-              <Text style={styles.textStyle}>Pay</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => paymentProcess('parked')}
-            >
-              <Text style={styles.textStyle}>Park</Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => paymentProcess('paid')}
+              >
+                <Text style={styles.textStyle}>Pay</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => paymentProcess('parked')}
+              >
+                <Text style={styles.textStyle}>***Park</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <Text>---</Text>
+          )}
           {paymentModalVisible && (
             <ModalComponent
               modalVisible={paymentModalVisible}
@@ -104,8 +114,8 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
             >
               <PayMentMethodComponent
                 data={paymentDetails}
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
+                modalVisible={paymentModalVisible}
+                setModalVisible={setPaymentModalVisible}
               />
             </ModalComponent>
           )}
