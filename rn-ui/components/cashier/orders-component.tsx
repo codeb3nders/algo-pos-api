@@ -137,48 +137,51 @@ const Orders = () => {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
-          <View>
-            <SelectDropdown
-              buttonTextStyle={{ textTransform: 'capitalize' }}
-              defaultButtonText="Item Discount"
-              selectedRowTextStyle={{
-                textTransform: 'capitalize',
-                fontWeight: 'bold',
-              }}
-              rowTextStyle={{ textTransform: 'capitalize' }}
-              data={DISCOUNT}
-              onSelect={(selectedItem, index) => {
-                setDeduction(() => ({
-                  type: selectedItem.type,
-                  value: selectedItem.value,
-                }));
-              }}
-              buttonTextAfterSelection={(selectedItem, index) => {
-                // text represented after item is selected
-                // if data array is an array of objects then return selectedItem.property to render after item is selected
-                return `Discount: ${selectedItem.value * 100}%`;
-              }}
-              rowTextForSelection={(item, index) => {
-                // text represented for each item in dropdown
-                // if data array is an array of objects then return item.property to represent item in dropdown
-                return `${item.type} - ${item.value * 100}%`;
-              }}
-            />
-          </View>
-          <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Cancel</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => updateOrderDetails(selectedId)}
-            >
-              <Text style={styles.textStyle}>Update</Text>
-            </TouchableOpacity>
+
+            <View className="flex items-center mb-10">
+              <SelectDropdown
+                buttonTextStyle={{ textTransform: 'capitalize' }}
+                defaultButtonText="Item Discount"
+                selectedRowTextStyle={{
+                  textTransform: 'capitalize',
+                  fontWeight: 'bold',
+                }}
+                rowTextStyle={{ textTransform: 'capitalize' }}
+                data={DISCOUNT}
+                onSelect={(selectedItem, index) => {
+                  setDeduction(() => ({
+                    type: selectedItem.type,
+                    value: selectedItem.value,
+                  }));
+                }}
+                buttonTextAfterSelection={(selectedItem, index) => {
+                  // text represented after item is selected
+                  // if data array is an array of objects then return selectedItem.property to render after item is selected
+                  return `Discount: ${selectedItem.value * 100}%`;
+                }}
+                rowTextForSelection={(item, index) => {
+                  // text represented for each item in dropdown
+                  // if data array is an array of objects then return item.property to represent item in dropdown
+                  return `${item.type} - ${item.value * 100}%`;
+                }}
+              />
+            </View>
+            <View className="flex items-center">
+              <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => updateOrderDetails(selectedId)}
+                >
+                  <Text style={styles.textStyle}>Update</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
 
           {/* <QueueOrderComponent

@@ -57,7 +57,7 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
         <View className="flex items-center mb-10">
           <SelectDropdown
             buttonTextStyle={{ textTransform: 'capitalize' }}
-            defaultButtonText="Total D discount"
+            defaultButtonText="Apply Discount"
             selectedRowTextStyle={{
               textTransform: 'capitalize',
               fontWeight: 'bold',
