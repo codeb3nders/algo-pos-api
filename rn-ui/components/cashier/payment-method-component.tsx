@@ -6,7 +6,6 @@ import {
   ScrollView,
   SafeAreaView,
   TextInput,
-  KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -36,6 +35,7 @@ const PayMentMethodComponent = ({
   // };
 
   const processPayment = (referenceNumber?: string, details?: string) => {
+    alert('here');
     const dataToSave = Object.assign({}, data);
 
     dataToSave.referenceNumber = referenceNumber && referenceNumber;
@@ -50,6 +50,7 @@ const PayMentMethodComponent = ({
       saveSales(dataToSave);
       updateOrder([]);
     }
+
     setModalVisible(!modalVisible);
   };
 
@@ -68,22 +69,27 @@ const PayMentMethodComponent = ({
     return (
       <SafeAreaView>
         <Text className="mb-5">Amount to pay: {toPay}</Text>
-        <Text>Cash Received {cashReceived}</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeNumber}
-          value={cashReceived}
-          placeholder="useless placeholder"
-          keyboardType="decimal-pad"
-        />
-        <Text>Change {cashReceived && change}</Text>
+        <InputView>
+          <Text>Cash Received</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeNumber}
+            value={cashReceived}
+            placeholder="useless placeholder"
+            keyboardType="decimal-pad"
+          />
+        </InputView>
+        <InputView>
+          <Text>Change {cashReceived && change}</Text>
+        </InputView>
+
         <View className="flex flex-row justify-between my-10">
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={() => setModalVisible(!modalVisible)}
           >
             <Text style={styles.textStyle}>Close</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {paymentMethod && (
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
@@ -102,6 +108,10 @@ const PayMentMethodComponent = ({
     );
   };
 
+  const InputView = ({ children }: any) => {
+    return <View className="flex flex-row items-center">{children}</View>;
+  };
+
   const EWallet = () => {
     const [referenceNumber, onChangeReferenceNumber] = useState<any>('');
     const [details, onChangeDetails] = useState<any>('');
@@ -110,29 +120,28 @@ const PayMentMethodComponent = ({
     return (
       <SafeAreaView>
         <Text className="mb-5">Amount to pay: {toPay}</Text>
-        <Text>Rerence Number:</Text>
-        <TextInput
-          key={'refn'}
-          style={styles.input}
-          onChangeText={onChangeReferenceNumber}
-          value={referenceNumber}
-          placeholder="Ex: 1234141324"
-        />
-        <Text>Details:</Text>
-        <TextInput
-          key={'dt'}
-          style={styles.input}
-          onChangeText={onChangeDetails}
-          value={details}
-          placeholder="Payment details here"
-        />
+        <View className="flex flex-row items-center">
+          <Text className="w-24">Rerence #:</Text>
+          <TextInput
+            key={'refn'}
+            style={styles.input}
+            onChangeText={onChangeReferenceNumber}
+            value={referenceNumber}
+            placeholder="Ex: 1234141324"
+          />
+        </View>
+
+        <View className="flex flex-row items-center">
+          <Text className="w-24">Details:</Text>
+          <TextInput
+            key={'dt'}
+            style={styles.input}
+            onChangeText={onChangeDetails}
+            value={details}
+            placeholder="Payment details here"
+          />
+        </View>
         <View className="flex flex-row justify-between my-10">
-          <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={styles.textStyle}>Close</Text>
-          </TouchableOpacity>
           {paymentMethod && (
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
@@ -167,7 +176,7 @@ const PayMentMethodComponent = ({
   };
 
   return (
-    <View>
+    <ScrollView>
       <Text>Payment Method</Text>
       <View
         style={{
@@ -191,12 +200,6 @@ const PayMentMethodComponent = ({
             <Text className="flex flex-row text-center p-5 font-bold text-lg">
               Select Payment Method
             </Text>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Close</Text>
-            </TouchableOpacity>
           </View>
         ) : paymentMethod === 'cash' ? (
           <CashPayment />
@@ -204,7 +207,7 @@ const PayMentMethodComponent = ({
           <EWallet />
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -259,5 +262,6 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    width: '65%',
   },
 });

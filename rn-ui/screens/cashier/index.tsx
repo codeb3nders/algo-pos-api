@@ -9,12 +9,18 @@ import BasketComponent from '../../components/cashier/basket-component';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ParkedAlertComponent from '../../components/cashier/parked-alert-component';
 import ItemComponent from '../../components/cashier/item-component';
+import useOrientation from '../../hooks/useOrientation';
+import { ORIENTATION } from '../../constant';
+import Sales from '../sales/sales';
+import Orders from '../../components/cashier/orders-component';
+import BasketContent from '../../components/cashier/basket-content';
 
 const Cashier = ({ navigation }: any) => {
   const [category, setCategory] = useState('frappe');
   const [selectedCategory, setSelectedCategory] = useState<any>([]);
   const [group, setGroup] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
+  const orientation = useOrientation();
 
   const itemsStore = useItemStore();
   const { items, loadingData, loadItems } = itemsStore;
@@ -68,44 +74,60 @@ const Cashier = ({ navigation }: any) => {
 
   return (
     <View
+      className="flex flex-row flex-grow space-x-4 -1"
       style={{
         paddingTop: 10,
         top: 0,
         flex: 1,
       }}
     >
-      <GroupComponent
-        group={group}
-        category={category}
-        setCategory={setCategory}
-      />
-
       <View
-        className=" flex align-item-center shadow-md -m-2 p-1  py-2 bg-green-100 "
-        style={{ height: '90%' }}
+        className={`${
+          orientation === ORIENTATION.LANDSCAPE && 'w-3/5 border rounded-lg'
+        } `}
       >
-        <ScrollView>
-          <View className="flex justify-center align-top flex-row flex-wrap ">
-            {selectedCategory.length ? (
-              selectedCategory.map((item: Item, id: number) => {
-                return (
-                  <ItemComponent
-                    key={`b-${id}`}
-                    item={item}
-                    setModalVisible={setModalVisible}
-                  />
-                );
-              })
-            ) : (
-              <View className="h-96 w-full justify-center items-center">
-                <Text>Select Category</Text>
-              </View>
-            )}
-          </View>
-        </ScrollView>
+        <GroupComponent
+          group={group}
+          category={category}
+          setCategory={setCategory}
+        />
+
+        <View
+          className=" flex align-item-center shadow-md  p-1  py-2 bg-green-100"
+          style={
+            orientation === ORIENTATION.PORTRAIT
+              ? styles.portraitHeight
+              : styles.landscapeHeight
+          }
+        >
+          <ScrollView>
+            <View className="flex justify-center align-top flex-row flex-wrap ">
+              {selectedCategory.length ? (
+                selectedCategory.map((item: Item, id: number) => {
+                  return (
+                    <ItemComponent
+                      key={`b-${id}`}
+                      item={item}
+                      setModalVisible={setModalVisible}
+                    />
+                  );
+                })
+              ) : (
+                <View className="h-96 w-full justify-center items-center">
+                  <Text>Select Category</Text>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+        </View>
+        <ParkedAlertComponent />
+        {orientation === ORIENTATION.PORTRAIT && <BasketComponent />}
       </View>
-      <ParkedAlertComponent />
-      <BasketComponent />
+      {orientation === ORIENTATION.LANDSCAPE && (
+        <View className="w-1/3 border rounded-xl">
+          <BasketContent />
+        </View>
+      )}
     </View>
   );
 };
@@ -113,41 +135,11 @@ const Cashier = ({ navigation }: any) => {
 export default Cashier;
 
 const styles = StyleSheet.create({
-  itemLayout: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#fff',
-    backgroundColor: 'white',
-    height: 100,
-    width: 100,
-    margin: 5,
+  portraitHeight: {
+    height: '90%',
+    padding: 1,
   },
-  item: {
-    margin: 5,
-    padding: 5,
-    textAlign: 'center',
-    textAlignVertical: 'top',
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: '#F194FF',
-  },
-  buttonClose: {
-    width: 100,
-    margin: 5,
-    backgroundColor: '#2196F3',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  landscapeHeight: {
+    height: '70%',
   },
 });

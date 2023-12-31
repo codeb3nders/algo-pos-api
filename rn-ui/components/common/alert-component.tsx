@@ -13,8 +13,6 @@ const AlertComponent = ({
       className="items-center rounded-full bg-orange-500  m-2 p-2"
       style={{
         ...position,
-        // position: 'relative',
-        // minWidth: 50,
         width: 90,
         shadowColor: 'black',
         shadowOpacity: 0.26,

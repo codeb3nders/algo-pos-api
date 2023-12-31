@@ -28,9 +28,6 @@ const ItemComponent = ({
     };
 
     addOrder(order);
-
-    // setQueueOrder(item);
-    // setModalVisible(() => true);
   };
 
   return (

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Alert, Modal, StyleSheet, View } from 'react-native';
+import { Alert, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 const ModalComponent = ({
   modalVisible,
@@ -13,6 +14,7 @@ const ModalComponent = ({
   return (
     <View style={styles.centeredView}>
       <Modal
+        supportedOrientations={['portrait', 'landscape']}
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -22,7 +24,18 @@ const ModalComponent = ({
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>{children}</View>
+          <View style={styles.modalView}>
+            <View className="relative -top-2 -right-2 self-end p-1 rounded-full">
+              <TouchableOpacity
+                hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <AntDesign name="closecircle" size={24} color="orange" />
+              </TouchableOpacity>
+            </View>
+
+            {children}
+          </View>
         </View>
       </Modal>
     </View>
@@ -31,18 +44,20 @@ const ModalComponent = ({
 
 const styles = StyleSheet.create({
   centeredView: {
+    height: 'auto',
     backgroundColor: 'rgba(52, 52, 52, 0.8)',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: 22,
+    marginBottom: 22,
   },
   modalView: {
+    maxHeight: '90%',
     margin: 5,
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 15,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

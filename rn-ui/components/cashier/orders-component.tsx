@@ -7,14 +7,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { GroupedOrderItem, Order } from '../../interface';
+import { Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 import ModalComponent from '../common/modal-component';
 import { AntDesign } from '@expo/vector-icons';
 import { useSalesStore } from '../../store/sales.store';
 import { DISCOUNT } from '../../constant';
 import SelectDropdown from 'react-native-select-dropdown';
-import QueueOrderComponent from './queue-order-component';
 
 const Orders = () => {
   const orderStore = useOrderStore();
@@ -86,110 +85,109 @@ const Orders = () => {
       ) : (
         <Text>No Item</Text>
       )}
-      <View className="items-end  m-2 p-2" style={{ borderTopWidth: 1 }}>
+      <View className=" p-2 items-end">
         <Text>
-          Total item: {voucher?.totalQuantity} Total Amount:{' '}
-          {voucher?.totalPrice}
+          {voucher?.totalQuantity} items, Amount: {voucher?.totalPrice}
         </Text>
-        <Text>
-          Discount for {discount && discount.type} :{' '}
-          {discount && discount.value}
-        </Text>
-        <Text
-          className="border-t-2 font-bold items-end   mt-2 p-2"
-          style={{ fontSize: 16, borderTopWidth: 1 }}
-        >
+        {discount && (
+          <Text>
+            Discount {discount && discount.type} :{' '}
+            {discount && discount.value * 100}%
+          </Text>
+        )}
+        <Text className="font-bold" style={{ fontSize: 16, borderTopWidth: 1 }}>
           {`Total Amount: ${
             voucher?.totalPrice &&
             voucher?.totalPrice - (discount ? discount.value : 0)
           }`}
         </Text>
       </View>
-      <ModalComponent
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      >
-        <View>
-          <TouchableOpacity onPress={() => deleteItem(selectedId)}>
-            <View className="flex justify-center items-center w-7 h-7 mb-5">
-              <AntDesign name="delete" size={24} color="black" />
-            </View>
-          </TouchableOpacity>
-          <View className="items-center mb-10 w-64">
-            <Text className="font-bold capitalize">
-              {updatedOrder && updatedOrder.item}{' '}
-              {updatedOrder && updatedOrder?.option}: {updatedOrder?.price} x{' '}
-              {quantity}
-            </Text>
-            <View className="mt-5 fle flex-row">
-              <TouchableOpacity
-                className="mr-5"
-                onPress={() => {
-                  quantity > 1 && setQuantity((quantity) => quantity - 1);
-                }}
-              >
-                <AntDesign name="minuscircleo" size={24} color="black" />
-              </TouchableOpacity>
-              <Text> {'<-->'} </Text>
-              <TouchableOpacity
-                className="ml-5"
-                onPress={() => setQuantity((quantity) => quantity + 1)}
-              >
-                <AntDesign name="pluscircleo" size={24} color="black" />
-              </TouchableOpacity>
+      {modalVisible && (
+        <ModalComponent
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        >
+          <View>
+            <TouchableOpacity onPress={() => deleteItem(selectedId)}>
+              <View className="flex justify-center items-center w-7 h-7">
+                <AntDesign name="delete" size={24} color="black" />
+              </View>
+            </TouchableOpacity>
+            <View className="items-center mb-10 w-64">
+              <Text className="font-bold capitalize">
+                {updatedOrder && updatedOrder.item}{' '}
+                {updatedOrder && updatedOrder?.option}: {updatedOrder?.price} x{' '}
+                {quantity}
+              </Text>
+              <View className="mt-5 fle flex-row">
+                <TouchableOpacity
+                  className="mr-5"
+                  onPress={() => {
+                    quantity > 1 && setQuantity((quantity) => quantity - 1);
+                  }}
+                >
+                  <AntDesign name="minuscircleo" size={24} color="black" />
+                </TouchableOpacity>
+                <Text> {'<-->'} </Text>
+                <TouchableOpacity
+                  className="ml-5"
+                  onPress={() => setQuantity((quantity) => quantity + 1)}
+                >
+                  <AntDesign name="pluscircleo" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-        <View>
-          <SelectDropdown
-            rowStyle={{ backgroundColor: 'pink' }}
-            buttonTextStyle={{ textTransform: 'capitalize' }}
-            defaultButtonText="Apply discount"
-            selectedRowTextStyle={{
-              textTransform: 'capitalize',
-              fontWeight: 'bold',
-            }}
-            rowTextStyle={{ textTransform: 'capitalize' }}
-            data={DISCOUNT}
-            onSelect={(selectedItem, index) => {
-              setDeduction(() => ({
-                type: selectedItem.type,
-                value: selectedItem.value,
-              }));
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return `Discount: ${selectedItem.value * 100}%`;
-            }}
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return item.type;
-            }}
-          />
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
-          <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={styles.textStyle}>Cancel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => updateOrderDetails(selectedId)}
-          >
-            <Text style={styles.textStyle}>Update</Text>
-          </TouchableOpacity>
-        </View>
+          <View>
+            <SelectDropdown
+              buttonTextStyle={{ textTransform: 'capitalize' }}
+              defaultButtonText="Item Discount"
+              selectedRowTextStyle={{
+                textTransform: 'capitalize',
+                fontWeight: 'bold',
+              }}
+              rowTextStyle={{ textTransform: 'capitalize' }}
+              data={DISCOUNT}
+              onSelect={(selectedItem, index) => {
+                setDeduction(() => ({
+                  type: selectedItem.type,
+                  value: selectedItem.value,
+                }));
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return `Discount: ${selectedItem.value * 100}%`;
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return `${item.type} - ${item.value * 100}%`;
+              }}
+            />
+          </View>
+          <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => updateOrderDetails(selectedId)}
+            >
+              <Text style={styles.textStyle}>Update</Text>
+            </TouchableOpacity>
+          </View>
 
-        {/* <QueueOrderComponent
+          {/* <QueueOrderComponent
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           orderItem={updatedOrder}
         /> */}
-      </ModalComponent>
+        </ModalComponent>
+      )}
     </ScrollView>
   );
 };
@@ -235,18 +233,10 @@ const Product = ({
   const discountedAmount = totalAmount - totalAmount * deduct;
 
   return (
-    <View
-      className="flex"
-      style={{
-        alignItems: 'stretch',
-      }}
-    >
-      <TouchableOpacity
-        className="  rounded-lg m-1 border-b-2 border-r-2 border-gray-300 shadow-lg"
-        onPress={() => editItem(item)}
-      >
+    <View className="flex w-full rounded-lg m-1 border-b-2  border-gray-300 items-start">
+      <TouchableOpacity className="" onPress={() => editItem(item)}>
         <Text
-          className="capitalize   m-1 p-1"
+          className="capitalize p-1"
           key={item.itemId}
           style={{ fontSize: 12 }}
         >

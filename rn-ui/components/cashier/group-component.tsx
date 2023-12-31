@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
 
 import { StyleSheet } from 'react-native';
 import WhiteText from '../common/white-text-component';
@@ -11,11 +11,11 @@ const GroupComponent = ({ group, category, setCategory }: any) => {
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        maxHeight: 70,
-        padding: 5,
+        maxHeight: 60,
+        paddingTop: 5,
       }}
     >
-      <View>
+      <View className=" w-full">
         <ScrollView horizontal={true}>
           {group &&
             group.map((g: any) => {
