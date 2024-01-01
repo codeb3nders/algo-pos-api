@@ -3,26 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { useItemStore } from '../../store/item.store';
 import { Item } from '../../interface';
 import GroupComponent from '../../components/cashier/group-component';
-import ModalComponent from '../../components/common/modal-component';
-import QueueOrderComponent from '../../components/cashier/queue-order-component';
 import BasketComponent from '../../components/cashier/basket-component';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import ParkedAlertComponent from '../../components/cashier/parked-alert-component';
 import ItemComponent from '../../components/cashier/item-component';
 import useOrientation from '../../hooks/useOrientation';
 import { ORIENTATION } from '../../constant';
-import Sales from '../sales/sales';
-import Orders from '../../components/cashier/orders-component';
 import BasketContent from '../../components/cashier/basket-content';
+import { useOrderStore } from '../../store/order.store';
 
-const Cashier = ({ navigation }: any) => {
+const Cashier = () => {
   const [category, setCategory] = useState('frappe');
   const [selectedCategory, setSelectedCategory] = useState<any>([]);
   const [group, setGroup] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
   const orientation = useOrientation();
-
-  console.log('-- -- -- ', orientation, ORIENTATION.PORTRAIT);
+  const { orders } = useOrderStore();
 
   const itemsStore = useItemStore();
   const { items, loadingData, loadItems } = itemsStore;
@@ -45,9 +40,6 @@ const Cashier = ({ navigation }: any) => {
   };
 
   const groupedItem = async () => {
-    interface GroupedItems {
-      [category: string]: Item[];
-    }
     interface GroupedItem {
       category: string;
       items: Item[];
@@ -127,7 +119,7 @@ const Cashier = ({ navigation }: any) => {
       </View>
       {orientation === ORIENTATION.LANDSCAPE && (
         <View className="w-1/3 border rounded-xl">
-          <BasketContent />
+          {orders.length ? <BasketContent /> : <Text>No Item</Text>}
         </View>
       )}
     </View>

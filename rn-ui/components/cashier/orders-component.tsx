@@ -62,7 +62,7 @@ const Orders = () => {
   };
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <View>
       {voucher && voucher.totalQuantity ? (
         Object.keys(voucher.orders).map((order) => {
           const { orders } = voucher.orders[order];
@@ -191,7 +191,7 @@ const Orders = () => {
         /> */}
         </ModalComponent>
       )}
-    </ScrollView>
+    </View>
   );
 };
 

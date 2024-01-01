@@ -13,6 +13,7 @@ import { PAYMENT_METHOD } from '../../constant';
 import { IPaymentMethod, Sales } from '../../interface';
 import { useSalesStore } from '../../store/sales.store';
 import { useOrderStore } from '../../store/order.store';
+import ButtonComponent from '../common/button-component';
 
 const PayMentMethodComponent = ({
   data,
@@ -28,11 +29,6 @@ const PayMentMethodComponent = ({
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const { saveSales, updateSales } = useSalesStore();
   const { updateOrder } = useOrderStore();
-
-  // props.childRef.current = {
-  //   processPayment,
-  //   paymentMethod,
-  // };
 
   const processPayment = (referenceNumber?: string, details?: string) => {
     const dataToSave = Object.assign({}, data);
@@ -82,16 +78,9 @@ const PayMentMethodComponent = ({
           <Text>Change {cashReceived && change}</Text>
         </InputView>
 
-        <View className="flex flex-row justify-between my-10">
-          {/* <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={styles.textStyle}>Close</Text>
-          </TouchableOpacity> */}
+        <View className="flex flex-row justify-around my-2">
           {paymentMethod && (
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
+            <ButtonComponent
               onPress={() =>
                 processPayment(
                   '',
@@ -100,7 +89,7 @@ const PayMentMethodComponent = ({
               }
             >
               <Text style={styles.textStyle}>Pay</Text>
-            </TouchableOpacity>
+            </ButtonComponent>
           )}
         </View>
       </SafeAreaView>
@@ -120,9 +109,8 @@ const PayMentMethodComponent = ({
       <SafeAreaView>
         <Text className="mb-5">Amount to pay: {toPay}</Text>
         <View className="flex flex-row items-center">
-          <Text className="w-24">Rerence #:</Text>
+          <Text className="w-24">Reference #:</Text>
           <TextInput
-            key={'refn'}
             style={styles.input}
             onChangeText={onChangeReferenceNumber}
             value={referenceNumber}
@@ -140,14 +128,13 @@ const PayMentMethodComponent = ({
             placeholder="Payment details here"
           />
         </View>
-        <View className="flex flex-row justify-between my-10">
+        <View className="flex flex-row justify-around my-2">
           {paymentMethod && (
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
+            <ButtonComponent
               onPress={() => processPayment(referenceNumber, details)}
             >
               <Text style={styles.textStyle}>Pay</Text>
-            </TouchableOpacity>
+            </ButtonComponent>
           )}
         </View>
       </SafeAreaView>

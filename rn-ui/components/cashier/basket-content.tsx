@@ -4,26 +4,60 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  Animated,
+  Button,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SelectDropdown from 'react-native-select-dropdown';
 import { DISCOUNT, ORIENTATION } from '../../constant';
 import Orders from './orders-component';
 import { useSalesStore } from '../../store/sales.store';
-import { Sales } from '../../interface';
+import { Discount, Sales } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
 import ModalComponent from '../common/modal-component';
 import PayMentMethodComponent from './payment-method-component';
 import useOrientation from '../../hooks/useOrientation';
+import ButtonComponent from '../common/button-component';
 
 const BasketContent = ({ modalVisible, setModalVisible }: any) => {
   const orientation = useOrientation();
   const { saveSales, discount, setDiscount, vat } = useSalesStore();
   const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
-
   const [paymentDetails, setPaymentDetails] = useState<any>();
   const [paymentModalVisible, setPaymentModalVisible] =
     useState<boolean>(false);
+  const [showDiscount, setShowDiscount] = useState<boolean>(false);
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const fadeIn = () => {
+    setShowDiscount(true);
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const toggle = () => {
+    if (showDiscount) {
+      fadeOut();
+      setTimeout(() => {
+        setShowDiscount(!showDiscount);
+      }, 500);
+    } else {
+      setShowDiscount(!showDiscount);
+      fadeIn();
+    }
+  };
 
   const paymentProcess = (status: string) => {
     if (!voucher || !voucher.totalQuantity) return;
@@ -55,54 +89,101 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
     }
   };
 
+  const DiscountOptions = () => {
+    return (
+      <View className=" w-11/12 pr-5">
+        <ScrollView horizontal={true}>
+          {DISCOUNT.map((discount) => {
+            return (
+              <TouchableOpacity
+                hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+                onPress={() => {
+                  setDiscount(discount);
+                }}
+                className="border p-1 mx-2 rounded-lg bg-green-200 p-1 my-2"
+              >
+                <Text>{discount.type}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
+    );
+  };
+
   return (
-    <View className="flex flex-row  items-center justify-center  p-2">
+    <View className="flex flex-row  items-center justify-center  p-1">
       {/* <Text>asdfasdf</Text> */}
       <ScrollView>
         <Orders />
-        <View className="flex items-center mb-10">
-          <SelectDropdown
-            buttonTextStyle={{ textTransform: 'capitalize' }}
-            defaultButtonText="Apply Discount"
-            selectedRowTextStyle={{
-              textTransform: 'capitalize',
-              fontWeight: 'bold',
-            }}
-            rowTextStyle={{ textTransform: 'capitalize' }}
-            data={DISCOUNT}
-            onSelect={(selectedItem, index) => {
-              setDiscount(selectedItem);
-            }}
-            buttonTextAfterSelection={(selectedItem, index) => {
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return `Discount: ${selectedItem.value * 100}%`;
-            }}
-            rowTextForSelection={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return `${item.type} - ${item.value * 100}%`;
-            }}
-          />
+        <View className="flex items-start my-2 mb-5">
+          <View className="flex  w-full flex-row items-center">
+            <TouchableOpacity
+              className=" border-r-2 rounded-r-full"
+              onPress={() => toggle()}
+              hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+            >
+              <Text className="p-1 ">{'Discount '} </Text>
+            </TouchableOpacity>
+
+            <Animated.View
+              style={[
+                {
+                  // Bind opacity to animated value
+                  opacity: fadeAnim,
+                },
+              ]}
+            >
+              {showDiscount && (
+                <View>
+                  <DiscountOptions />
+                </View>
+              )}
+            </Animated.View>
+          </View>
+
+          {/* <SelectDropdown
+              buttonTextStyle={{ textTransform: 'capitalize' }}
+              defaultButtonText="Apply Discount"
+              selectedRowTextStyle={{
+                textTransform: 'capitalize',
+                fontWeight: 'bold',
+              }}
+              rowTextStyle={{ textTransform: 'capitalize' }}
+              data={DISCOUNT}
+              onSelect={(selectedItem, index) => {
+                setDiscount(selectedItem);
+              }}
+              buttonTextAfterSelection={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return `Discount: ${selectedItem.value * 100}%`;
+              }}
+              rowTextForSelection={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return `${item.type} - ${item.value * 100}%`;
+              }}
+            /> */}
         </View>
-        <View className="flex items-center">
+        <View>
           {orders.length ? (
             <View
-              className="space-x-10"
-              style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}
+              className="flex-row justify-around"
+              // style={{ flex: 1, flexDirection: 'row' }}
             >
-              <TouchableOpacity
+              <ButtonComponent
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => paymentProcess('paid')}
               >
                 <Text style={styles.textStyle}>Pay</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </ButtonComponent>
+              <ButtonComponent
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => paymentProcess('parked')}
               >
-                <Text style={styles.textStyle}>***Park</Text>
-              </TouchableOpacity>
+                <Text style={styles.textStyle}>Park</Text>
+              </ButtonComponent>
             </View>
           ) : (
             <Text>---</Text>
@@ -127,6 +208,24 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
 
 export default BasketContent;
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fadingContainer: {
+    padding: 20,
+    backgroundColor: 'powderblue',
+  },
+  fadingText: {
+    fontSize: 28,
+  },
+  buttonRow: {
+    flexBasis: 100,
+    justifyContent: 'space-evenly',
+    marginVertical: 16,
+  },
+
   itemLayout: {
     borderRadius: 10,
     borderWidth: 1,
@@ -162,9 +261,8 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: 'white',
-    // fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 16,
   },
   modalText: {
     marginBottom: 15,

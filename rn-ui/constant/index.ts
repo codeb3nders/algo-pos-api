@@ -1,8 +1,8 @@
 export const DISCOUNT = [
   { type: 'none', value: 0 },
-  { type: 'senior', value: 0.2 },
-  { type: 'employee', value: 0.1 },
-  { type: 'promo', value: 0.15 },
+  { type: 'senior 20%', value: 0.2 },
+  { type: 'employee 10%', value: 0.1 },
+  { type: 'promo 15%', value: 0.15 },
 ];
 export const VAT = [
   { type: 'vat1', value: 0.15 },
