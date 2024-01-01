@@ -82,7 +82,7 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
       orderData.paymentMethod = '';
       saveSales(orderData);
       updateOrder([]);
-      // setModalVisible && setModalVisible(!modalVisible);
+      setModalVisible && setModalVisible(!modalVisible);
     } else {
       setPaymentModalVisible(!paymentModalVisible);
       setPaymentDetails(() => orderData);
@@ -190,13 +190,13 @@ const BasketContent = ({ modalVisible, setModalVisible }: any) => {
           )}
           {paymentModalVisible && (
             <ModalComponent
-              modalVisible={paymentModalVisible}
-              setModalVisible={setPaymentModalVisible}
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
             >
               <PayMentMethodComponent
                 data={paymentDetails}
-                modalVisible={paymentModalVisible}
-                setModalVisible={setPaymentModalVisible}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
               />
             </ModalComponent>
           )}

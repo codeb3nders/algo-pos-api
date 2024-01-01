@@ -1,6 +1,8 @@
-import { TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
 import { Item, Order } from '../../interface';
 import { useOrderStore } from '../../store/order.store';
+import { useState } from 'react';
+import ModalComponent from '../common/modal-component';
 
 const ItemComponent = ({
   item,
@@ -13,7 +15,38 @@ const ItemComponent = ({
   const { addOrder, setQueueOrder } = orderStore;
   const imagelink = item.image;
 
+  const [variantVisible, setVariantVisible] = useState(false);
+  const [variants, setVariants] = useState<any>();
+
   const handleOnPress = (item: Item) => {
+    if (item.variants) {
+      setVariants(() => item.variants);
+      setVariantVisible(!variantVisible);
+    } else {
+      handleAddOrder(item);
+    }
+  };
+
+  const handleAddFromVariant = (variant: any, item: Item) => {
+    const order: Order = {
+      itemId: `${item?._id}-${variant.name}`,
+      item: variant.name,
+      option: item.option,
+      quantity: 1,
+      price: variant.price,
+      total: variant.price * 1,
+      deduction: null,
+      date: new Date(),
+      customer: item.customer,
+      status: null,
+    };
+
+    addOrder(order);
+    setVariantVisible(!variantVisible);
+    setVariants(null);
+  };
+
+  const handleAddOrder = (item: Item) => {
     const order: Order = {
       itemId: item?._id,
       item: item.item,
@@ -31,35 +64,57 @@ const ItemComponent = ({
   };
 
   return (
-    <TouchableOpacity
-      className="w-24 h-30 rounded-md bg-red-100 m-1 p-1"
-      style={{
-        shadowColor: 'black',
-        shadowOpacity: 0.26,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 10,
-        elevation: 5,
-        backgroundColor: 'white',
-      }}
-      onPress={() => handleOnPress(item)}
-    >
-      {!imagelink ? (
-        <Image
-          className="rounded-xl"
-          style={{ alignSelf: 'center', width: 90, height: 70 }}
-          source={require(`../../assets/icon.png`)}
-        />
-      ) : (
-        <Image
-          className="rounded-xl"
-          style={{ alignSelf: 'center', width: 90, height: 70 }}
-          source={{ uri: `${imagelink}` }}
-        />
+    <>
+      <TouchableOpacity
+        className="w-24 h-30 rounded-md bg-red-100 m-1 p-1"
+        style={{
+          shadowColor: 'black',
+          shadowOpacity: 0.26,
+          shadowOffset: { width: 0, height: 2 },
+          shadowRadius: 10,
+          elevation: 5,
+          backgroundColor: 'white',
+        }}
+        onPress={() => handleOnPress(item)}
+      >
+        {!imagelink ? (
+          <Image
+            className="rounded-xl"
+            style={{ alignSelf: 'center', width: 90, height: 70 }}
+            source={require(`../../assets/icon.png`)}
+          />
+        ) : (
+          <Image
+            className="rounded-xl"
+            style={{ alignSelf: 'center', width: 90, height: 70 }}
+            source={{ uri: `${imagelink}` }}
+          />
+        )}
+        <Text style={styles.item} key={item._id}>
+          {item.item} {item.option}
+        </Text>
+      </TouchableOpacity>
+      {variantVisible && (
+        <ModalComponent
+          modalVisible={variantVisible}
+          setModalVisible={setVariantVisible}
+        >
+          <View>
+            {variants.map((variant: any) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => handleAddFromVariant(variant, item)}
+                >
+                  <Text>
+                    {variant.name} - {variant.price}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </ModalComponent>
       )}
-      <Text style={styles.item} key={item._id}>
-        {item.item} {item.option}
-      </Text>
-    </TouchableOpacity>
+    </>
   );
 };
 

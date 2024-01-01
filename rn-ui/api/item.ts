@@ -45,6 +45,10 @@ export const getItems = async (): Promise<Item[]> => {
       onlineStoreAvailability: true,
       onlineStoreDescription: 'some description',
       VATExempt: true,
+      variants: [
+        { name: 'v16 oz', price: 90 },
+        { name: 'v22 oz', price: 120 },
+      ],
       customer: 'JM',
     },
     {

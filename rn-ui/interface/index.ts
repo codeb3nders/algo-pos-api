@@ -76,6 +76,7 @@ export interface Item {
   onlineStoreAvailability: boolean;
   onlineStoreDescription: string;
   VATExempt: boolean;
+  variants?: { name: string; price: number }[] | null;
   customer?: string;
 }
 
