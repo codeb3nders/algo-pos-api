@@ -6,6 +6,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
+import ThermalPrinterModule from 'react-native-thermal-printer';
+import ToPrint from './components/to-print';
+
 const Tab = createBottomTabNavigator();
 
 function Mytabs() {
@@ -25,17 +28,34 @@ function Settings({navigation}: any) {
   );
 }
 
+async function printNow() {
+  // inside async function
+  console.log('START PRINTING');
+  try {
+    await ThermalPrinterModule.printBluetooth({
+      payload: 'hello world',
+      printerNbrCharactersPerLine: 38,
+    });
+  } catch (err: any) {
+    //error handling
+    console.log('ERROR');
+    console.log(err.message);
+  }
+}
+
 function HomeScreen({navigation}: any) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Details Screen</Text>
+        <Text>Details Screen-----</Text>
         <Button
           title="Go to MyTabs"
           onPress={() => navigation.navigate('Mytabs')}
         />
       </View>
+
+      <ToPrint />
     </View>
   );
 }
