@@ -7,7 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import ThermalPrinterModule from 'react-native-thermal-printer';
-import ToPrint from './components/to-print';
+import ToPrint from './to-print';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +45,9 @@ async function printNow() {
 
 function HomeScreen({navigation}: any) {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View
+      className="bg-blue-300"
+      style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Home Screen</Text>
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Text>Details Screen-----</Text>
@@ -62,7 +64,9 @@ function HomeScreen({navigation}: any) {
 
 function DetailsScreen({navigation}: any) {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View
+      className="bg-green-200"
+      style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
       <Text>Details Screen</Text>
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Text>Details Screen</Text>
