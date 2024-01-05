@@ -68,6 +68,7 @@ export interface OrderStore {
 export interface Item {
   _id: string;
   category: string;
+  categoryColor: string;
   item: string;
   image: string;
   option: string;

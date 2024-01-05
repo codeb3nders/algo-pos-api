@@ -1,7 +1,7 @@
-import { TouchableOpacity, Image, StyleSheet, Text, View } from 'react-native';
-import { Item, Order } from '../../interface';
-import { useOrderStore } from '../../store/order.store';
-import { useState } from 'react';
+import {TouchableOpacity, Image, StyleSheet, Text, View} from 'react-native';
+import {Item, Order} from '../../interface';
+import {useOrderStore} from '../../store/order.store';
+import {useState} from 'react';
 import ModalComponent from '../common/modal-component';
 
 const ItemComponent = ({
@@ -12,7 +12,7 @@ const ItemComponent = ({
   setModalVisible: Function;
 }) => {
   const orderStore = useOrderStore();
-  const { addOrder, setQueueOrder } = orderStore;
+  const {addOrder, setQueueOrder} = orderStore;
   const imagelink = item.image;
 
   const [variantVisible, setVariantVisible] = useState(false);
@@ -70,24 +70,23 @@ const ItemComponent = ({
         style={{
           shadowColor: 'black',
           shadowOpacity: 0.26,
-          shadowOffset: { width: 0, height: 2 },
+          shadowOffset: {width: 0, height: 2},
           shadowRadius: 10,
           elevation: 5,
           backgroundColor: 'white',
         }}
-        onPress={() => handleOnPress(item)}
-      >
+        onPress={() => handleOnPress(item)}>
         {!imagelink ? (
           <Image
             className="rounded-xl"
-            style={{ alignSelf: 'center', width: 90, height: 70 }}
+            style={{alignSelf: 'center', width: 90, height: 70}}
             source={require(`../../assets/icon.png`)}
           />
         ) : (
           <Image
             className="rounded-xl"
-            style={{ alignSelf: 'center', width: 90, height: 70 }}
-            source={{ uri: `${imagelink}` }}
+            style={{alignSelf: 'center', width: 90, height: 70}}
+            source={{uri: `${imagelink}`}}
           />
         )}
         <Text style={styles.item} key={item._id}>
@@ -97,14 +96,12 @@ const ItemComponent = ({
       {variantVisible && (
         <ModalComponent
           modalVisible={variantVisible}
-          setModalVisible={setVariantVisible}
-        >
+          setModalVisible={setVariantVisible}>
           <View>
             {variants.map((variant: any) => {
               return (
                 <TouchableOpacity
-                  onPress={() => handleAddFromVariant(variant, item)}
-                >
+                  onPress={() => handleAddFromVariant(variant, item)}>
                   <Text>
                     {variant.name} - {variant.price}
                   </Text>
