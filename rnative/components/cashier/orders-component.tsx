@@ -88,12 +88,12 @@ const Orders = () => {
         <Text>
           {voucher?.totalQuantity} items, Amount: {voucher?.totalPrice}
         </Text>
-        {discount && (
+        {discount && discount.value ? (
           <Text>
             Discount {discount && discount.type} :{' '}
             {discount && discount.value * 100}%
           </Text>
-        )}
+        ) : null}
         <Text className="font-bold" style={{fontSize: 16, borderTopWidth: 1}}>
           {`Total Amount: ${
             voucher?.totalPrice &&
@@ -211,8 +211,7 @@ const Product = ({
           className="capitalize p-1"
           key={item.itemId}
           style={{fontSize: 12}}>
-          {itm} {opt}: {price} x {quantity}
-          {deduct > 0 && ' - '}
+          {quantity} {itm} {opt}: {price} {deduct > 0 && ' - '}
           {deduct > 0 && deduct} = {discountedAmount}
         </Text>
       </TouchableOpacity>

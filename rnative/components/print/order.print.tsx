@@ -14,54 +14,16 @@ import {useSalesStore} from '../../store/sales.store';
 import {blutoothPrinting} from '../../helpers/printer';
 import ButtonComponent from '../common/button-component';
 import WhiteText from '../common/white-text-component';
+import {usePrintOrder} from '../../hooks/usePrinting';
 
 const ToPrint = () => {
-  const orderStore = useOrderStore();
-  useSalesStore();
-  const {voucher, createVoucher} = orderStore;
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const [state, setState] = useState({
-    text: "[L]<font size='tall'>Customer :</font>\n",
-  });
-
-  const prepare = () => {
-    const allOrders = voucher?.orders;
-
-    if (!allOrders) return;
-
-    let txt = '[L]KITCHEN ORDER\n';
-
-    Object.keys(allOrders).forEach((order: any) => {
-      const {orders} = voucher.orders[order];
-
-      orders.forEach(item => {
-        const itm = item ? item.item : '';
-        const price = item ? item.price : 0;
-        const opt = item ? item.option : 0;
-        const quantity = item ? item.quantity : 0;
-        txt += `${itm} ${opt}: x ${quantity} \n`;
-      });
-    });
-
-    txt += `=============End==============`;
-
-    setState(() => ({text: txt}));
-  };
-
-  useEffect(() => {
-    prepare();
-  }, [voucher]);
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const voucher = usePrintOrder();
 
   const onPress = async () => {
     try {
       console.log('We will invoke the native module here!');
 
-      await blutoothPrinting(state.text);
+      await blutoothPrinting(voucher);
 
       console.log('done printing');
     } catch (err: any) {

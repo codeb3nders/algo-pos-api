@@ -51,6 +51,7 @@ export interface GroupedOrderItem {
   totalQuantity: number;
   totalPrice: number;
   orders: GroupedOrders;
+  paymentMethod?: string;
 }
 
 export interface OrderStore {
@@ -76,7 +77,7 @@ export interface Item {
   onlineStoreAvailability: boolean;
   onlineStoreDescription: string;
   VATExempt: boolean;
-  variants?: { name: string; price: number }[] | null;
+  variants?: {name: string; price: number}[] | null;
   customer?: string;
 }
 
@@ -86,7 +87,7 @@ export interface Order {
   option: string;
   quantity: number;
   price: number;
-  deduction: { type: string; value: number } | null;
+  deduction: {type: string; value: number} | null;
   total: number;
   date: Date;
   customer: any;

@@ -15,6 +15,7 @@ import {useSalesStore} from '../../store/sales.store';
 import {useOrderStore} from '../../store/order.store';
 import ButtonComponent from '../common/button-component';
 import {blutoothPrinting} from '../../helpers/printer';
+import {usePrintVoucher} from '../../hooks/usePrinting';
 
 const PayMentMethodComponent = ({
   data,
@@ -32,15 +33,15 @@ const PayMentMethodComponent = ({
   const {updateOrder} = useOrderStore();
   const [autoPrint, setAutoPrint] = useState<boolean>(true);
 
-  const processPayment = (referenceNumber?: string, details?: string) => {
+  const dataToPrint = usePrintVoucher();
+
+  const processPayment = async (referenceNumber?: string, details?: string) => {
     const dataToSave = Object.assign({}, data);
 
     dataToSave.referenceNumber = referenceNumber && referenceNumber;
     dataToSave.details = details && details;
 
     dataToSave.paymentMethod = paymentMethod;
-
-    console.log('TO SAVE', dataToSave);
 
     if (isParked) {
       dataToSave.status = 'paid';
@@ -53,75 +54,16 @@ const PayMentMethodComponent = ({
     setModalVisible && setModalVisible(!modalVisible);
 
     if (autoPrint) {
-      printNow(dataToSave);
+      let dtp = dataToPrint;
+      dtp += `\nMethod: ${paymentMethod}\n`;
+
+      if (paymentMethod !== 'cash') {
+        dtp += `Ref#: ${referenceNumber}\n`;
+        dtp += `Dtls#: ${details}\n`;
+      }
+
+      await blutoothPrinting(dtp);
     }
-  };
-
-  const printNow = (dataToPrint: any) => {
-    console.log('DATA', dataToPrint);
-    const data = {
-      Vat: 10,
-      _id: 1704444470327,
-      amount: 24,
-      customer: 'JM Copino',
-      date: '2024-01-05T08:47:50.327Z',
-      details: '',
-      discount: 0,
-      orders: [
-        {
-          customer: 'JM',
-          date: '2024-01-05T08:47:45.107Z',
-          deduction: null,
-          item: 'xxxxsometing',
-          itemId: '6563173cd6d85255804737e51',
-          option: 'someting',
-          price: 12,
-          quantity: 1,
-          status: null,
-          total: 12,
-        },
-        {
-          customer: 'JM',
-          date: '2024-01-05T08:47:46.358Z',
-          deduction: null,
-          item: 'someting',
-          itemId: '656319177b222f30385fcd022',
-          option: 'someting',
-          price: 12,
-          quantity: 1,
-          status: null,
-          total: 12,
-        },
-      ],
-      paymentMethod: 'gcash',
-      referenceNumber: '123456',
-      status: 'paid',
-    };
-
-    const prepare = () => {
-      let txt = '[L]ALL ITEMS\n';
-
-      data.orders.forEach(item => {
-        const itm = item ? item.item : '';
-        const price = item ? item.price : 0;
-        const deduct = item.deduction ? item.deduction : 0;
-        const opt = item ? item.option : 0;
-        const quantity = item ? item.quantity : 0;
-        const totalAmount = price * quantity;
-        const discountedAmount = totalAmount - totalAmount * deduct;
-        txt += `${itm} ${opt}: ${price} x ${quantity} ${deduct > 0 && ' - '} ${
-          deduct > 0 && ' - '
-        }\n`;
-        // ${deduct > 0 && ' - '}
-        //  ${deduct > 0 && deduct} = ${discountedAmount}`;
-      });
-
-      txt += `=============Total==============`;
-
-      // console.log('- - - - -', txt, '============', voucher.totalPrice, voucher);
-    };
-
-    // blutoothPrinting(dataToSave);
   };
 
   const CashPayment = () => {

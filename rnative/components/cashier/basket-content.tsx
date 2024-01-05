@@ -19,8 +19,7 @@ import ButtonComponent from '../common/button-component';
 import useOrientation from '../../hooks/useOrientation';
 import BlackText from '../common/black-text-component';
 import WhiteText from '../common/white-text-component';
-import ToPrint from '../print/order.print';
-import Receipt from '../print/receipt.print';
+import KinthecOrder from '../print/order.print';
 
 const BasketContent = ({modalVisible, setModalVisible}: any) => {
   const orientation = useOrientation();
@@ -172,8 +171,7 @@ const BasketContent = ({modalVisible, setModalVisible}: any) => {
             </ModalComponent>
           )}
 
-          {/* <ToPrint /> */}
-          <Receipt />
+          <KinthecOrder />
         </View>
       </ScrollView>
     </View>
