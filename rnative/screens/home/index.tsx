@@ -4,7 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Cashier from '../cashier';
-import Sales from '../sales/sales';
+import Sales from '../sales';
 
 const Tab = createBottomTabNavigator();
 const TabsComponents = () => {

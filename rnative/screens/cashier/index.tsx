@@ -7,7 +7,7 @@ import GroupComponent from '../../components/cashier/group-component';
 import ItemComponent from '../../components/cashier/item-component';
 import ParkedAlertComponent from '../../components/cashier/parked-alert-component';
 import BasketContent from '../../components/cashier/basket-content';
-import useOrientation from '../../src/hooks/useOrientation';
+import useOrientation from '../../hooks/useOrientation';
 import {ORIENTATION} from '../../constant';
 import BasketComponent from '../../components/cashier/basket-component';
 
@@ -85,7 +85,7 @@ const Cashier = () => {
         />
 
         <View
-          className=" flex align-item-center shadow-md  p-1  py-2 bg-green-100"
+          className=" flex align-item-center shadow-md  p-1  py-2 bg-green-200"
           style={styles.landscapeHeight}>
           <ScrollView>
             <View className="flex justify-center align-top flex-row flex-wrap ">
@@ -113,7 +113,7 @@ const Cashier = () => {
 
       <View className="w-1/3 border rounded-xl">
         {orientation === ORIENTATION.LANDSCAPE && (
-          <View className="w-full border rounded-xl">
+          <View className="w-full p-1">
             {orders.length ? <BasketContent /> : <Text>No Item</Text>}
           </View>
         )}

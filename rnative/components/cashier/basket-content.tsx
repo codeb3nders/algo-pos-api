@@ -16,8 +16,11 @@ import {useOrderStore} from '../../store/order.store';
 import ModalComponent from '../common/modal-component';
 import PayMentMethodComponent from './payment-method-component';
 import ButtonComponent from '../common/button-component';
-import useOrientation from '../../src/hooks/useOrientation';
+import useOrientation from '../../hooks/useOrientation';
 import BlackText from '../common/black-text-component';
+import WhiteText from '../common/white-text-component';
+import ToPrint from '../print/order.print';
+import Receipt from '../print/receipt.print';
 
 const BasketContent = ({modalVisible, setModalVisible}: any) => {
   const orientation = useOrientation();
@@ -148,10 +151,10 @@ const BasketContent = ({modalVisible, setModalVisible}: any) => {
               <ButtonComponent
                 // style={[styles.button, styles.buttonClose]}
                 onPress={() => paymentProcess('paid')}>
-                <BlackText text="Pay" />
+                <WhiteText text="Pay" />
               </ButtonComponent>
               <ButtonComponent onPress={() => paymentProcess('parked')}>
-                <BlackText text="Park" />
+                <WhiteText text="Park" />
               </ButtonComponent>
             </View>
           ) : (
@@ -159,15 +162,18 @@ const BasketContent = ({modalVisible, setModalVisible}: any) => {
           )}
           {paymentModalVisible && (
             <ModalComponent
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}>
+              modalVisible={paymentModalVisible}
+              setModalVisible={setPaymentModalVisible}>
               <PayMentMethodComponent
                 data={paymentDetails}
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
+                modalVisible={paymentModalVisible}
+                setModalVisible={setPaymentModalVisible}
               />
             </ModalComponent>
           )}
+
+          {/* <ToPrint /> */}
+          <Receipt />
         </View>
       </ScrollView>
     </View>

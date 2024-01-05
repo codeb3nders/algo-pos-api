@@ -26,13 +26,13 @@ const GroupComponent = ({ group, category, setCategory }: any) => {
                       ? ' h-80 border border-green-300 bg-green-100'
                       : 'bg-algo-green-1'
                   }  `}
-                  style={{
-                    shadowColor: 'black',
-                    shadowOpacity: 0.26,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowRadius: 10,
-                    elevation: 5,
-                  }}
+                  // style={{
+                  //   shadowColor: 'black',
+                  //   shadowOpacity: 0.26,
+                  //   shadowOffset: { width: 0, height: 2 },
+                  //   shadowRadius: 10,
+                  //   elevation: 5,
+                  // }}
                   key={`a-${g.category}`}
                   onPress={() => setCategory(() => g.category)}
                 >

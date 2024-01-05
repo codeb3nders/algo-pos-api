@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Dimensions} from 'react-native';
-import {ORIENTATION} from '../../constant';
+import {ORIENTATION} from '../constant';
 
 const useOrientation = (): string => {
   const isPortrait = () => {

@@ -4,8 +4,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import COLOR from '../colors';
-import {HomeScreen} from '../screens/home';
+import COLOR from './colors';
+import {HomeScreen} from './screens/home';
 
 function SettingsScreen() {
   return (

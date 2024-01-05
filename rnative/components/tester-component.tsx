@@ -7,7 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import ThermalPrinterModule from 'react-native-thermal-printer';
-import ToPrint from './to-print';
+import ToPrint from './print/order.print';
 
 const Tab = createBottomTabNavigator();
 
