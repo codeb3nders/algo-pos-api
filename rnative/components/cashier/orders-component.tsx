@@ -6,23 +6,22 @@ import {
   StatusBar,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Order } from '../../interface';
-import { useOrderStore } from '../../store/order.store';
+import React, {useEffect, useState} from 'react';
+import {Order} from '../../interface';
+import {useOrderStore} from '../../store/order.store';
 import ModalComponent from '../common/modal-component';
-import { AntDesign } from '@expo/vector-icons';
-import { useSalesStore } from '../../store/sales.store';
-import { DISCOUNT } from '../../constant';
-import SelectDropdown from 'react-native-select-dropdown';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useSalesStore} from '../../store/sales.store';
+import {DISCOUNT} from '../../constant';
 
 const Orders = () => {
   const orderStore = useOrderStore();
-  const { orders, voucher, createVoucher } = orderStore;
+  const {orders, voucher, createVoucher} = orderStore;
   const [modalVisible, setModalVisible] = useState(false);
   const [updatedOrder, setUpdatedOrder] = useState<Order | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
   const [selectedId, setSelectedId] = useState<string>('');
-  const { sales, discount, setDiscount, vat } = useSalesStore();
+  const {sales, discount, setDiscount, vat} = useSalesStore();
 
   const [deduction, setDeduction] = useState<{
     type: string;
@@ -34,13 +33,13 @@ const Orders = () => {
   }, [orders, sales, discount]);
 
   const deleteItem = (id: string) => {
-    const result = orderStore.orders.filter((order) => order.itemId !== id);
+    const result = orderStore.orders.filter(order => order.itemId !== id);
     orderStore.updateOrder(result);
     setModalVisible(!modalVisible);
   };
 
   const updateOrderDetails = (itemId: string | null) => {
-    const updatedOrders = orderStore.orders.map((order) => {
+    const updatedOrders = orderStore.orders.map(order => {
       if (order.itemId === itemId) {
         const amount = order.price * quantity;
         const deduct = deduction ? deduction?.value : 0;
@@ -64,10 +63,10 @@ const Orders = () => {
   return (
     <View>
       {voucher && voucher.totalQuantity ? (
-        Object.keys(voucher.orders).map((order) => {
-          const { orders } = voucher.orders[order];
+        Object.keys(voucher.orders).map(order => {
+          const {orders} = voucher.orders[order];
 
-          return orders.map((o) => {
+          return orders.map(o => {
             return (
               <Product
                 key={`c-${o.itemId}`}
@@ -95,7 +94,7 @@ const Orders = () => {
             {discount && discount.value * 100}%
           </Text>
         )}
-        <Text className="font-bold" style={{ fontSize: 16, borderTopWidth: 1 }}>
+        <Text className="font-bold" style={{fontSize: 16, borderTopWidth: 1}}>
           {`Total Amount: ${
             voucher?.totalPrice &&
             voucher?.totalPrice - (discount ? discount.value : 0)
@@ -105,8 +104,7 @@ const Orders = () => {
       {modalVisible && (
         <ModalComponent
           modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        >
+          setModalVisible={setModalVisible}>
           <View>
             <TouchableOpacity onPress={() => deleteItem(selectedId)}>
               <View className="flex justify-center items-center w-7 h-7">
@@ -123,61 +121,32 @@ const Orders = () => {
                 <TouchableOpacity
                   className="mr-5"
                   onPress={() => {
-                    quantity > 1 && setQuantity((quantity) => quantity - 1);
-                  }}
-                >
+                    quantity > 1 && setQuantity(quantity => quantity - 1);
+                  }}>
                   <AntDesign name="minuscircleo" size={24} color="black" />
                 </TouchableOpacity>
                 <Text> {'<-->'} </Text>
                 <TouchableOpacity
                   className="ml-5"
-                  onPress={() => setQuantity((quantity) => quantity + 1)}
-                >
+                  onPress={() => setQuantity(quantity => quantity + 1)}>
                   <AntDesign name="pluscircleo" size={24} color="black" />
                 </TouchableOpacity>
               </View>
             </View>
 
             <View className="flex items-center mb-10">
-              <SelectDropdown
-                buttonTextStyle={{ textTransform: 'capitalize' }}
-                defaultButtonText="Item Discount"
-                selectedRowTextStyle={{
-                  textTransform: 'capitalize',
-                  fontWeight: 'bold',
-                }}
-                rowTextStyle={{ textTransform: 'capitalize' }}
-                data={DISCOUNT}
-                onSelect={(selectedItem, index) => {
-                  setDeduction(() => ({
-                    type: selectedItem.type,
-                    value: selectedItem.value,
-                  }));
-                }}
-                buttonTextAfterSelection={(selectedItem, index) => {
-                  // text represented after item is selected
-                  // if data array is an array of objects then return selectedItem.property to render after item is selected
-                  return `Discount: ${selectedItem.value * 100}%`;
-                }}
-                rowTextForSelection={(item, index) => {
-                  // text represented for each item in dropdown
-                  // if data array is an array of objects then return item.property to represent item in dropdown
-                  return `${item.type} - ${item.value * 100}%`;
-                }}
-              />
+              <Text>SELECT DROPDOWN TO BE REPLACE</Text>
             </View>
             <View className="flex items-center">
-              <View style={{ flex: 1, flexDirection: 'row', maxHeight: 50 }}>
+              <View style={{flex: 1, flexDirection: 'row', maxHeight: 50}}>
                 <TouchableOpacity
                   style={[styles.button, styles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
+                  onPress={() => setModalVisible(!modalVisible)}>
                   <Text style={styles.textStyle}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.button, styles.buttonClose]}
-                  onPress={() => updateOrderDetails(selectedId)}
-                >
+                  onPress={() => updateOrderDetails(selectedId)}>
                   <Text style={styles.textStyle}>Update</Text>
                 </TouchableOpacity>
               </View>
@@ -241,8 +210,7 @@ const Product = ({
         <Text
           className="capitalize p-1"
           key={item.itemId}
-          style={{ fontSize: 12 }}
-        >
+          style={{fontSize: 12}}>
           {itm} {opt}: {price} x {quantity}
           {deduct > 0 && ' - '}
           {deduct > 0 && deduct} = {discountedAmount}

@@ -1,16 +1,17 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import ModalComponent from '../common/modal-component';
-import { useOrderStore } from '../../store/order.store';
-import { Sales } from '../../interface';
-import { useSalesStore } from '../../store/sales.store';
-import { AntDesign } from '@expo/vector-icons';
+import {useOrderStore} from '../../store/order.store';
+import {Sales} from '../../interface';
+import {useSalesStore} from '../../store/sales.store';
+
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import BasketContent from './basket-content';
 
 const BasketComponent = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { orders, updateOrder, voucher, createVoucher } = useOrderStore();
-  const { saveSales, discount } = useSalesStore();
+  const {orders, updateOrder, voucher, createVoucher} = useOrderStore();
+  const {saveSales, discount} = useSalesStore();
   const [paymentModalVisible, setPaymentModalVisible] =
     useState<boolean>(false);
   const [paymentDetails, setPaymentDetails] = useState<any>();
@@ -22,11 +23,10 @@ const BasketComponent = () => {
   if (!voucher || !voucher.totalQuantity) return;
 
   return (
-    <View style={{ position: 'absolute', bottom: 5, right: 5 }}>
+    <View style={{position: 'absolute', bottom: 5, right: 5}}>
       <TouchableOpacity
         style={[styles.button, styles.buttonCtr]}
-        onPress={() => setModalVisible(!modalVisible)}
-      >
+        onPress={() => setModalVisible(!modalVisible)}>
         <Text style={styles.textStyle}>
           <AntDesign name="shoppingcart" size={18} color="white" />{' '}
           {voucher.totalQuantity}
@@ -36,8 +36,7 @@ const BasketComponent = () => {
       {modalVisible && (
         <ModalComponent
           modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        >
+          setModalVisible={setModalVisible}>
           <BasketContent
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}

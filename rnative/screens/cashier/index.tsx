@@ -7,13 +7,16 @@ import GroupComponent from '../../components/cashier/group-component';
 import ItemComponent from '../../components/cashier/item-component';
 import ParkedAlertComponent from '../../components/cashier/parked-alert-component';
 import BasketContent from '../../components/cashier/basket-content';
+import useOrientation from '../../src/hooks/useOrientation';
+import {ORIENTATION} from '../../constant';
+import BasketComponent from '../../components/cashier/basket-component';
 
 const Cashier = () => {
   const [category, setCategory] = useState('frappe');
   const [selectedCategory, setSelectedCategory] = useState<any>([]);
   const [group, setGroup] = useState<any>();
   const [modalVisible, setModalVisible] = useState(false);
-  // const orientation = useOrientation();
+  const orientation = useOrientation();
   const {orders} = useOrderStore();
 
   const itemsStore = useItemStore();
@@ -71,7 +74,10 @@ const Cashier = () => {
         top: 0,
         flex: 1,
       }}>
-      <View className={`${'w-3/5 border rounded-lg'} `}>
+      <View
+        className={`${
+          orientation === ORIENTATION.LANDSCAPE && 'w-3/5 border rounded-lg'
+        } `}>
         <GroupComponent
           group={group}
           category={category}
@@ -102,10 +108,15 @@ const Cashier = () => {
           </ScrollView>
         </View>
         <ParkedAlertComponent />
+        {orientation === ORIENTATION.PORTRAIT && <BasketComponent />}
       </View>
 
       <View className="w-1/3 border rounded-xl">
-        {orders.length ? <BasketContent /> : <Text>No Item</Text>}
+        {orientation === ORIENTATION.LANDSCAPE && (
+          <View className="w-full border rounded-xl">
+            {orders.length ? <BasketContent /> : <Text>No Item</Text>}
+          </View>
+        )}
       </View>
     </View>
   );
