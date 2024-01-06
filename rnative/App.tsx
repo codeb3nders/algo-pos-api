@@ -6,14 +6,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import COLOR from './colors';
 import TabsComponents from './screens/home';
-
-function SettingsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import SettingsScreen from './screens/settings';
+import {useSettingStore} from './store/settings.store';
 
 const HomeScreen = ({navigation}: any) => {
   const Tab = createBottomTabNavigator();
@@ -23,38 +17,18 @@ const HomeScreen = ({navigation}: any) => {
         headerShown: false,
       }}>
       <Tab.Screen name="Dashboard" component={Dashboard} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 };
 
-function Dashboard({route, navigation}: any) {
-  // const {itemId} = route.params;
-  // const otherParam = route.params.otherParam;
-
+function Dashboard({navigation}: any) {
+  const settingStore = useSettingStore();
   return (
     <View className="flex-1 items-center justify-center">
       <Text className="text-algo-green-1">Home Screen</Text>
 
-      {/* <Button
-        title="Settings"
-        onPress={() => navigation.navigate('Settings')}
-      /> */}
-
       <Button title="Store" onPress={() => navigation.navigate('Store')} />
-    </View>
-  );
-}
-
-function Settings({route, navigation}: any) {
-  // const {itemId} = route.params;
-  // const otherParam = route.params.otherParam;
-
-  return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-algo-green-1">Settings Screen</Text>
-
-      {/* <Button title="TabsScreen" onPress={() => navigation.navigate('Tabs')} /> */}
     </View>
   );
 }
@@ -82,17 +56,7 @@ const StacksComponents = () => {
         }}
       />
 
-      <Stack.Screen name="Settings" component={SettingsScreen} />
-
       <Stack.Screen name="Store" component={TabsComponents} />
-
-      {/* <Stack.Screen
-        name="Settings"
-        options={{
-          headerTitle: props => <LogoTitle />,
-        }}
-        component={SettingsScreen}
-      /> */}
     </Stack.Navigator>
   );
 };

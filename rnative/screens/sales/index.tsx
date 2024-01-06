@@ -2,12 +2,14 @@ import * as React from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 // import {useAuth} from '../../context/auth-context';
 import {useSalesStore} from '../../store/sales.store';
-import {Sales} from '../../interface';
+import {Discount, GroupedOrderItem, Order, Sales} from '../../interface';
 import {useEffect, useState} from 'react';
 import ModalComponent from '../../components/common/modal-component';
 import PayMentMethodComponent from '../../components/cashier/payment-method-component';
 import ButtonComponent from '../../components/common/button-component';
 import WhiteText from '../../components/common/white-text-component';
+import {blutoothPrinting, prepareVoucher} from '../../helpers/printer';
+import {moneyFormat} from '../../helpers/money-format';
 
 export default function SalesComponent({filter}: any) {
   const saleStore = useSalesStore();
@@ -34,6 +36,12 @@ export default function SalesComponent({filter}: any) {
     setPaymentModalVisible(!paymentModalVisible);
   };
 
+  const printVoucher = async (data: Sales) => {
+    const toPrintData = prepareVoucher(data);
+
+    await blutoothPrinting(toPrintData);
+  };
+
   return (
     <>
       <ScrollView
@@ -49,6 +57,9 @@ export default function SalesComponent({filter}: any) {
                 className={`flex w-45 ${
                   item.status === 'paid' ? 'bg-algo-green-1' : 'bg-blue-300'
                 }  border border-gray-300 p-2 m-2 rounded-md shadow-sl`}>
+                <TouchableOpacity onPress={() => printVoucher(item)}>
+                  <Text>PRINT</Text>
+                </TouchableOpacity>
                 <Text className="text-white">
                   {new Date(item.date).toDateString()}
                 </Text>

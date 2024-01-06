@@ -16,6 +16,7 @@ import {useOrderStore} from '../../store/order.store';
 import ButtonComponent from '../common/button-component';
 import {blutoothPrinting} from '../../helpers/printer';
 import {usePrintVoucher} from '../../hooks/usePrinting';
+import {useSettingStore} from '../../store/settings.store';
 
 const PayMentMethodComponent = ({
   data,
@@ -31,7 +32,9 @@ const PayMentMethodComponent = ({
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const {saveSales, updateSales} = useSalesStore();
   const {updateOrder} = useOrderStore();
-  const [autoPrint, setAutoPrint] = useState<boolean>(true);
+  const {settings} = useSettingStore();
+
+  console.log('SSSSSSSSS', settings);
 
   const dataToPrint = usePrintVoucher();
 
@@ -53,7 +56,7 @@ const PayMentMethodComponent = ({
 
     setModalVisible && setModalVisible(!modalVisible);
 
-    if (autoPrint) {
+    if (settings?.autoPrint) {
       let dtp = dataToPrint;
       dtp += `\nMethod: ${paymentMethod}\n`;
 
@@ -177,7 +180,19 @@ const PayMentMethodComponent = ({
 
   return (
     <ScrollView>
-      <Text>Payment Method</Text>
+      <View className="flex flex-row justify-center align-middle">
+        <Text className="p-2">Payment Method</Text>
+        {settings?.autoPrint ? (
+          <Text className="p-2 text-algo-green-1">
+            Voucher printing is set to autmatic
+          </Text>
+        ) : (
+          <Text className="p-2 text-orange-600">
+            WARNING: Voucher printing is set to manual
+          </Text>
+        )}
+      </View>
+
       <View
         style={{
           flex: 1,

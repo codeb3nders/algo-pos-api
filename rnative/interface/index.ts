@@ -94,3 +94,12 @@ export interface Order {
   customer: any;
   status: any;
 }
+
+export interface SettingProperty {
+  autoPrint: boolean;
+}
+
+export interface ISetting {
+  settings: SettingProperty | null;
+  setSettings: (settings: SettingProperty) => void;
+}
