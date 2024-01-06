@@ -9,7 +9,10 @@ import Sales from '../sales';
 const Tab = createBottomTabNavigator();
 const TabsComponents = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
       <Tab.Screen
         name="Cashier"
         options={{
@@ -32,7 +35,7 @@ const TabsComponents = () => {
   );
 };
 
-export function HomeScreen({navigation}: any) {
+export default function HomeScreen({navigation}: any) {
   // const auth: any = useAuth();
   return <TabsComponents />;
 }

@@ -63,6 +63,11 @@ const ItemComponent = ({
     addOrder(order);
   };
 
+  var string = item.item;
+  var length = 15;
+  var trimmedString =
+    string.length > length ? string.substring(0, length - 3) + '...' : string;
+
   return (
     <>
       <TouchableOpacity
@@ -79,18 +84,18 @@ const ItemComponent = ({
         {!imagelink ? (
           <Image
             className="rounded-xl"
-            style={{alignSelf: 'center', width: 90, height: 70}}
+            style={{alignSelf: 'center', width: 80, height: 50}}
             source={require(`../../assets/icon.png`)}
           />
         ) : (
           <Image
             className="rounded-xl"
-            style={{alignSelf: 'center', width: 90, height: 70}}
+            style={{alignSelf: 'center', width: 80, height: 50}}
             source={{uri: `${imagelink}`}}
           />
         )}
         <Text style={styles.item} key={item._id}>
-          {item.item} {item.option}
+          {trimmedString} {item.option}
         </Text>
       </TouchableOpacity>
       {variantVisible && (

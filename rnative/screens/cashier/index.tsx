@@ -86,7 +86,11 @@ const Cashier = () => {
 
         <View
           className=" flex align-item-center shadow-md  p-1  py-2 bg-green-200"
-          style={styles.landscapeHeight}>
+          style={
+            orientation === ORIENTATION.LANDSCAPE
+              ? styles.landscapeHeight
+              : styles.portraitHeight
+          }>
           <ScrollView>
             <View className="flex justify-center align-top flex-row flex-wrap ">
               {selectedCategory.length ? (
@@ -128,8 +132,12 @@ const styles = StyleSheet.create({
   portraitHeight: {
     height: '90%',
     padding: 1,
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
   },
   landscapeHeight: {
     height: '70%',
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
   },
 });

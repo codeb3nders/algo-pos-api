@@ -1,4 +1,4 @@
-export const itemData = [
+export const itemData2 = [
   {
     _id: '6563173cd6d85255804737e50',
     category: 'frappe',

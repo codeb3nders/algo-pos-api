@@ -8,11 +8,15 @@ const GroupComponent = ({group, category, setCategory}: any) => {
   return (
     <View
       style={{
+        position: 'relative',
+        top: 2,
+        left: 10,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
         maxHeight: 60,
         paddingTop: 5,
+        zIndex: 10,
       }}>
       <View className=" w-full">
         <ScrollView horizontal={true}>
@@ -22,7 +26,7 @@ const GroupComponent = ({group, category, setCategory}: any) => {
                 <TouchableOpacity
                   className={`px-2 h-10 rounded-lg mx-1 shadow-md ${
                     g.category.toLowerCase() === category.toLowerCase()
-                      ? ' h-80 border bg-green-200'
+                      ? ' h-24 border bg-green-200'
                       : 'border bg-algo-green-1'
                   }  `}
                   // style={{

@@ -5,7 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import COLOR from './colors';
-import {HomeScreen} from './screens/home';
+import TabsComponents from './screens/home';
 
 function SettingsScreen() {
   return (
@@ -15,63 +15,57 @@ function SettingsScreen() {
   );
 }
 
-function DetailsScreen({route, navigation}: any) {
-  const {itemId} = route.params;
-  const otherParam = route.params.otherParam;
-
+const HomeScreen = ({navigation}: any) => {
+  const Tab = createBottomTabNavigator();
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-algo-green-1">Details Screen - {itemId}</Text>
-      <Button
-        title="Go to Details... again"
-        onPress={() =>
-          navigation.push('Details', {
-            itemId: Math.ceil(Math.random() * 100),
-          })
-        }
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-      <Button
-        title="Go back to first screen in stack"
-        onPress={() => navigation.popToTop()}
-      />
-
-      <Button title="Go to Tabs" onPress={() => navigation.navigate('Tabs')} />
-    </View>
-  );
-}
-
-const Tab = createBottomTabNavigator();
-
-// TABS
-const TabsComponents = () => {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
 };
 
-function LogoTitle() {
+function Dashboard({route, navigation}: any) {
+  // const {itemId} = route.params;
+  // const otherParam = route.params.otherParam;
+
   return (
-    <View style={{width: 50, height: 50}}>
-      <Text>JMC</Text>
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-algo-green-1">Home Screen</Text>
+
+      {/* <Button
+        title="Settings"
+        onPress={() => navigation.navigate('Settings')}
+      /> */}
+
+      <Button title="Store" onPress={() => navigation.navigate('Store')} />
     </View>
   );
 }
 
-// STACKS
+function Settings({route, navigation}: any) {
+  // const {itemId} = route.params;
+  // const otherParam = route.params.otherParam;
 
-const Stack = createNativeStackNavigator();
+  return (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-algo-green-1">Settings Screen</Text>
+
+      {/* <Button title="TabsScreen" onPress={() => navigation.navigate('Tabs')} /> */}
+    </View>
+  );
+}
 
 const StacksComponents = () => {
+  const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
-        headerShown: false,
+        // headerShown: false,
         headerStyle: {
           backgroundColor: `${COLOR['algo-green-1']}`,
         },
@@ -84,10 +78,21 @@ const StacksComponents = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: props => <LogoTitle {...props} />,
-        }}></Stack.Screen>
-      <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen name="Tabs" component={TabsComponents} />
+          title: 'Dashboard',
+        }}
+      />
+
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+
+      <Stack.Screen name="Store" component={TabsComponents} />
+
+      {/* <Stack.Screen
+        name="Settings"
+        options={{
+          headerTitle: props => <LogoTitle />,
+        }}
+        component={SettingsScreen}
+      /> */}
     </Stack.Navigator>
   );
 };
