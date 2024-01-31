@@ -8,6 +8,7 @@ import COLOR from './colors';
 import TabsComponents from './screens/home';
 import SettingsScreen from './screens/settings';
 import {useSettingStore} from './store/settings.store';
+import Playground from './screens/playground';
 
 const HomeScreen = ({navigation}: any) => {
   const Tab = createBottomTabNavigator();
@@ -27,6 +28,10 @@ function Dashboard({navigation}: any) {
   return (
     <View className="flex-1 items-center justify-center">
       <Text className="text-algo-green-1">Home Screen</Text>
+      <Button
+        title="Playground"
+        onPress={() => navigation.navigate('Playground')}
+      />
 
       <Button title="Store" onPress={() => navigation.navigate('Store')} />
     </View>
@@ -56,6 +61,7 @@ const StacksComponents = () => {
         }}
       />
 
+      <Stack.Screen name="Playground" component={Playground} />
       <Stack.Screen name="Store" component={TabsComponents} />
     </Stack.Navigator>
   );
