@@ -17,6 +17,7 @@ import {
   View,
 } from 'react-native';
 
+// just a note
 import {
   Colors,
   DebugInstructions,
